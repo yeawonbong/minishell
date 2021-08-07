@@ -1,54 +1,86 @@
 #include "minishell.h"
 
-void	ft_echo(char *buf)
+void	temp
 {
-	if (!ft_strncmp(buf, "echo -n ", 8))
-		printf("%s", buf + 8);
-	else 
-		printf("%s\n", buf + 5);
+	
 }
 
-void	ft_cd(char *buf)
-{
-	chdir(buf + 3);
-	printf("change dir\n");
-}
 
-void	ft_pwd(void)
-{
-	char cwd[BUFSIZE];
-
-	getcwd(cwd, BUFSIZE);
-	printf("%s\n", cwd);
-}
-
-int	main(char **envp)
+int	main()
 {
 	char	*buf;
-	// pid_t	pid;
+	char	str[1024];
+	pid_t	pid = 0;
+	char	**cmd;
+	int		i;
+	int		fd[2]; 
 
+	char	*ptr;
+
+
+
+	i = 0;
+	pid = 0;
 	buf = NULL;
+	pipe(fd); // fd[1] >-----------> fd[0]
 	while(1)
 	{
-		if (buf)
-			free(buf);
-		buf = readline("enter a line :");
-		if (!ft_strncmp(buf, "echo ", 5))
-			ft_echo(buf);
-		else if (!ft_strncmp(buf, "cd ", 3))
-			ft_cd(buf);
-		else if (!ft_strncmp(buf, "pwd ", 3))
-			ft_pwd();
+		buf = readline("minishell$:");
+		//buf 파싱 (pipe / redir 검사 - 갯수세기)
+		//그 갯수만큼 fork - 명령 하나당 프로세스 1개 생성
+		//마지막 프로세스부터 첫번째 명령을 실행. 재귀함수같은 느낌
+		cmd = ft_split(buf, '|');
+		// printf("split = %s\n", cmd[]);
+		// printf("split = %s\n", cmd[1]); cat test.c | grep "hello"
+		//부모 input (cat test.c) pipe 출력 --> grep
+
+		while (cmd[i++])
+		{
+			pid = fork();
+			if (pid == 0)
+			{
+				dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
+				close(fd[0]);
+
+				//write(1, "(((명령 결과값 보내기)))", 11); // 표준 출력(-현재 fd[1])에 write
+				exit(0);
+			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
+			wait(0);
+			dup2(fd[0], STDIN_FILENO); // 표준입력을 fd[0]으로
+			close(fd[1]);
+			read(STDIN_FILENO, str, 1024); // 표준 입력(-현재 fd[0])을 읽어
+			printf("fd[0] = %s\n", str);
+			break;
+		}
+		if (pid == 0)
+		{
+			if (!ft_strncmp(buf, "echo ", 5))
+				ft_echo(buf);
+			else if (!ft_strncmp(buf, "cd ", 3))
+				ft_cd(buf);
+			else if (!ft_strncmp(buf, "pwd ", 3))
+				ft_pwd();
+			exit(0);
+		}
+		wait(0);
 		// else if ((!ft_strncmp(buf, "export ", 7))) 보류
 		add_history(buf);
+		free(buf);
+		break;
 	}
 }
+// cat < file1
+// grep "hello"
+// wc -l
+// cat < file1 | grep "hello" | wc -l // 2차배열의 포인터배열 (3) split 파이프 기준으로 자르고, 처리를 해준다. 
 
-		// pid = fork();
-		// if (pid == 0) // 자식 프로세스
-		// {
-		// }
-		// free(buf);
+// p = strchr(" ") + 1
+
+
+// {cat, <, file1} 2차 //명령 다음에 < > 있는가. 
+// {grep, "hello"}
+
+
 
 		// PWD=/Users/ybong/Desktop/minishell
 
