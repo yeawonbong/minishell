@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:05:36 by sma               #+#    #+#             */
-/*   Updated: 2021/07/04 16:35:35 by sma              ###   ########.fr       */
+/*   Updated: 2021/08/10 14:52:27 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void			child_p(char **argv, char **envp, t_data *data, int fd[2])
 	redirect_in(argv[1]);
 	pipe_connect(fd, STDOUT_FILENO);
 	execve(data->path, data->cmd, envp);
-}
+}// usr/bin/grep,  grep "hello"
 
 void			parent_p(char **argv, char **envp, t_data *data, int fd[2])
 {

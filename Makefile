@@ -6,12 +6,13 @@
 #    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/08/07 11:11:34 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/08/10 15:05:35 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = minishell.c\
-ms_builtins.c
+ms_builtins.c\
+ms_run_cmd.c
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror

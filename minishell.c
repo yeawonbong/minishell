@@ -1,89 +1,72 @@
 #include "minishell.h"
 
-// char	**ft_fillcmd(char *buf)
-// {
-// 	char	**cmd;
-// 	int		i;
-
-// 	i = 0;
-// 	cmd = ft_split(buf, '|');
-// 	while(cmd[i]) //함수 따로 빼기
-// 	{
-// 		char *temp=0;
-// 		temp = ft_strtrim(cmd[i], " ");
-// 		free(cmd[i]);
-// 		cmd[i] = temp;
-// 		printf("split = %s0\n", cmd[i]);
-// 		i++;
-// 	}
-// 	return(cmd);
-// }
-
-
-int	main()
+void	ft_fillcmds(char *buf, t_data *data, char **envp) //이름수정할래
 {
+	char	*temp;
+	int		i;
+	int j = 0;
+	temp = 0;
+	i = 0;
+	data->cmds = ft_split(buf, '|');
+	 //함수 따로 빼기
+	
+	printf("split = %s0\n", data->cmds[i]);
+	ft_sort_env(envp, data);//////
+	while(envp[j])
+	{
+		printf("(%d)sort_env = %s\n", j ,envp[data->sort_env[j]]);
+		j++;
+	}
+	return ;
+}
+
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_data	data;
 	char	*buf;
 	pid_t	pid = 0;
-	char	**cmd;
 	int		i;
 	int		fd[2]; 
 	char	output[BUFSIZE];
-	char	*ptr;
 
-
-
-	i = 0;
+//초반에 env_sort 세팅
+	if (1 < argc || argv[1])
+		return (0);
 	pid = 0;
 	buf = NULL;
 	pipe(fd); // fd[1] >-----------> fd[0]
 	while(1)
 	{
-		buf = readline("minishell $ ");
-		cmd = ft_split(buf, '|');
-		while(cmd[i]) //함수 따로 빼기
-		{
-			char *temp=0;
-			temp = ft_strtrim(cmd[i], " ");
-			free(cmd[i]);
-			cmd[i] = temp;
-			printf("split = %s0\n", cmd[i]);
-			i++;
-		}
-		//부모 input (cat test.c) pipe 출력 --> grep
-		// cmd = ft_fillcmd(buf);
+		buf = readline("minishell $ "); //경로 넣어주기!! 해야함
+		ft_fillcmds(buf, &data, envp);
+		printf("cmds[0] = %s\n", data.cmds[0]);
 		i = 0;
-		while (cmd[i])
+		while (data.cmds[i]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
 		{
 			ft_memset(output, 0, BUFSIZE);
 			pid = fork();
 			if (pid == 0)
 			{
-				ptr = cmd[i];
 				dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
 				close(fd[0]);
-				if (!ft_strncmp(cmd[i], "echo ", 5))
-					ft_echo(cmd[i]);
-				else if (!ft_strncmp(cmd[i], "cd ", 3))
-					ft_cd(cmd[i]);
-				else if (!ft_strncmp(cmd[i], "pwd", 3))
-					ft_pwd();
-				else
-					exit(1);
-				// else if ((!ft_strncmp(buf, "export ", 7)))
-				// 	ft_export(); //unset
-				// else if (!(ft_strncmp(cmd[i], "env ", 4)))
-				// 	ft_
-				exit(0);
+				run_cmd(envp, &data);
+				if (!(ft_strncmp(buf, "export", 6)))
+					ft_export(envp, &data, buf); //unset
+				else if (execve(data.path, data.cmd_args, envp) == -1)
+				{
+					perror("execve error :");
+				}
 			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
 			wait(0);
-			read(fd[0], output, 1024); // 표준 입력(-현재 fd[0])을 읽어
+			read(fd[0], output, BUFSIZE); // 표준 입력(-현재 fd[0])을 읽어
 			printf("output = %s", output);
-			free(cmd[i]);
+			free(data.cmds[i]);
 			i++;
 		}
 		add_history(buf);
 		free(buf);
-		free(cmd);
+		free(data.cmds);
 	}
 }
 // cat < file1

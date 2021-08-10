@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_parsing.c                                    :+:      :+:    :+:   */
+/*   ms_run_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/08/10 14:51:12 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/08/10 17:34:45 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 void			split_free(char **array)
 {
@@ -26,8 +26,8 @@ void			split_free(char **array)
 
 char			**get_path(char **envp)
 {
-	char		*cmd;
-	char		**envir;
+	char		*cmds;
+	char		**paths;
 	int			i;
 
 	i = 0;
@@ -35,16 +35,16 @@ char			**get_path(char **envp)
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
-			cmd = envp[i];
-			cmd += 5;
-			envir = ft_split(cmd, ':');
-			return (envir);
+			cmds = envp[i];
+			cmds += 5;
+			paths = ft_split(cmds, ':');
+			return (paths);
 		}
 	}
 	return (0);
 }
 
-char			*path_join(char **envir, char *cmd)
+char			*path_join(char **paths, char *cmds)
 {
 	char		*p;
 	char		*temp;
@@ -52,10 +52,10 @@ char			*path_join(char **envir, char *cmd)
 	int			fd;
 
 	i = 0;
-	while (envir[i])
+	while (paths[i])
 	{
-		temp = ft_strjoin(envir[i], "/");
-		p = ft_strjoin(temp, cmd);
+		temp = ft_strjoin(paths[i], "/");
+		p = ft_strjoin(temp, cmds);
 		fd = open(p, O_RDONLY);
 		if (fd > 0)
 		{
@@ -67,31 +67,30 @@ char			*path_join(char **envir, char *cmd)
 		close(fd);
 		i++;
 	}
-	write(1, "cmd error\n", 10);
+	write(1, "cmds error in path join\n", 24);
 	exit(1);
 	return (0);
 }
 
-void			run_cmd(char **argv, char **envp, t_data *data)
+void			run_cmd(char **envp, t_data *data)
 {
-	char		**envir;
+	char		**paths;
 
-	envir = get_path(envp);
+	paths = get_path(envp);
 	if (data->path != 0)
 		free(data->path);
-	if (data->cmd != 0)
-		split_free(data->cmd);
-	while (data->count < 4)
+	if (data->cmd_args != 0)
+	 	split_free(data->cmds);
+	data->idx = 0;
+	data->cmd_args = ft_split(data->cmds[data->idx], ' ');
+	data->path = path_join(paths, data->cmd_args[0]); // ((ls,  -l, NULL),   grep "hello", NULL)
+	if (data->path > 0)
 	{
-		data->cmd = ft_split(argv[data->count], ' '); // grep "hello"
-		data->path = path_join(envir, data->cmd[0]);
-		if (data->path > 0)
-		{
-			data->count++;
-			break ;
-		}
-		split_free(data->cmd);
-		data->count++;
+		data->idx++;
+		split_free(paths);
+		return ;
 	}
-	split_free(envir);
+	split_free(data->cmds);
+	data->idx++;
+	split_free(paths);
 }
