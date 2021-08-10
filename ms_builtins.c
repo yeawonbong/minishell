@@ -21,3 +21,5 @@ void	ft_pwd(void)
 	getcwd(cwd, BUFSIZE);
 	printf("%s\n", cwd);
 }
+
+// void	
