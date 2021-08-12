@@ -19,9 +19,11 @@
 
 typedef	struct		s_data
 {
-	int		*sort_env;
 	char	**cmds;
 	char	**cmd_args;
+	char	**env;
+	int		env_height;
+	int		*sort_env;
 	char	*path;
 	int		idx;
 }					t_data;
@@ -29,12 +31,16 @@ typedef	struct		s_data
 /*
 ** minishell.c
 */
+int     ft_env_height(char **env);
+void	ft_copy_env(char **src, char **dest);
+void	ft_filldata(t_data *data, char **envp);
+
 
 /*
 ** ms_builtins.c
 */
-void	ft_sort_env(char **envp, t_data *data);
-void	ft_export(char **envp, t_data *data, char *buf);
+void	ft_sort_env(t_data *data);
+void	ft_export(t_data *data, char *buf);
 
 
 /*

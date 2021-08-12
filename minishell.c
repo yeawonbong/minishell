@@ -1,22 +1,37 @@
 #include "minishell.h"
 
-void	ft_fillcmds(char *buf, t_data *data, char **envp) //이름수정할래
+int     ft_env_height(char **env)
 {
-	char	*temp;
-	int		i;
-	int j = 0;
-	temp = 0;
+	int i;
+
 	i = 0;
-	data->cmds = ft_split(buf, '|');
-	 //함수 따로 빼기
-	
-	printf("split = %s0\n", data->cmds[i]);
-	ft_sort_env(envp, data);//////
-	while(envp[j])
+	while (env[i])
+		i++;
+	return (i);
+}
+
+void	ft_copy_env(char **src, char **dest)
+{
+	int	i;
+
+	i = 0;
+	while (src[i])
 	{
-		printf("(%d)sort_env = %s\n", j ,envp[data->sort_env[j]]);
-		j++;
+		dest[i] = src[i];
+		i++;
 	}
+	return ;
+}
+
+void	ft_filldata(t_data *data, char **envp) //이름수정할래
+{
+	
+	//복사
+	data->env_height = ft_env_height(envp);
+	data->env = (char **)malloc(sizeof(char*) * data->env_height + 1);
+	data->env[data->env_height - 1] = NULL;
+	ft_copy_env(envp, data->env);
+	ft_sort_env(data);
 	return ;
 }
 
@@ -36,35 +51,44 @@ int	main(int argc, char **argv, char **envp)
 	pid = 0;
 	buf = NULL;
 	pipe(fd); // fd[1] >-----------> fd[0]
+	ft_filldata(&data, envp);
 	while(1)
 	{
 		buf = readline("minishell $ "); //경로 넣어주기!! 해야함
-		ft_fillcmds(buf, &data, envp);
+		if (*buf)
+			add_history(buf);
+		data.cmds = ft_split(buf, '|');
 		printf("cmds[0] = %s\n", data.cmds[0]);
 		i = 0;
 		while (data.cmds[i]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
 		{
 			ft_memset(output, 0, BUFSIZE);
-			pid = fork();
+			if (!(ft_strncmp(buf, "export", 6)))
+			{
+				ft_export(&data, buf); //unset
+				break;
+			}
+			else
+				pid = fork();
 			if (pid == 0)
 			{
 				dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
 				close(fd[0]);
-				run_cmd(envp, &data);
 				if (!(ft_strncmp(buf, "export", 6)))
-					ft_export(envp, &data, buf); //unset
-				else if (execve(data.path, data.cmd_args, envp) == -1)
+					ft_export(&data, buf); //unset
+				else
 				{
-					perror("execve error :");
+					run_cmd(envp, &data);
+					if (execve(data.path, data.cmd_args, envp) == -1)
+						perror("execve error :");
 				}
 			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
 			wait(0);
 			read(fd[0], output, BUFSIZE); // 표준 입력(-현재 fd[0])을 읽어
-			printf("output = %s", output);
+			// printf("output = %s", output);
 			free(data.cmds[i]);
 			i++;
 		}
-		add_history(buf);
 		free(buf);
 		free(data.cmds);
 	}
