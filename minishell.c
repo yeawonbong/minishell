@@ -15,22 +15,38 @@ void	ft_copy_env(char **src, char **dest)
 	int	i;
 
 	i = 0;
+	// if (**dest)
+	// 	ft_split_free(dest);
 	while (src[i])
 	{
 		dest[i] = ft_strdup(src[i]);
 		i++;
 	}
+	// ft_split_free(src);
 	return ;
 }
 
 void	ft_filldata(t_data *data, char **envp) //이름수정할래
 {
-	
+	// -3 / 3
+	// -
+	// -
+	// - NULL
 	//복사
+	int		i;
+
+	i = 0;
 	data->env_height = ft_env_height(envp);
-	data->env = (char **)malloc(sizeof(char*) * data->env_height + 1);
+	data->env = (char **)malloc(sizeof(char*) * (data->env_height + 1));
 	data->env[data->env_height] = NULL;
-	ft_copy_env(envp, data->env);
+	printf("height=%d\n", data->env_height);
+	while (envp[i])
+	{
+		data->env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	// printf("iii=%d\n", i);
+	// // ft_copy_env(envp, data->env);
 	ft_sort_env(data);
 	return ;
 }
@@ -41,8 +57,8 @@ int	main(int argc, char **argv, char **envp)
 	t_data	data;
 	char	*buf;
 	pid_t	pid = 0;
-	int		i;
 	int		fd[2]; 
+	int		i;
 	char	output[BUFSIZE];
 
 //초반에 env_sort 세팅

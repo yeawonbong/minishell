@@ -6,7 +6,7 @@
 #    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/08/10 15:05:35 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/08/13 14:46:23 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ ms_builtins.c\
 ms_run_cmd.c
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -fsanitize=address
+# -Wall -Wextra -Werror 
 AR = ar rcs
 NAME = minishell.a
 OBJS = $(SRCS:.c=.o)
