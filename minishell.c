@@ -17,7 +17,7 @@ void	ft_copy_env(char **src, char **dest)
 	i = 0;
 	while (src[i])
 	{
-		dest[i] = src[i];
+		dest[i] = ft_strdup(src[i]);
 		i++;
 	}
 	return ;
@@ -29,7 +29,7 @@ void	ft_filldata(t_data *data, char **envp) //이름수정할래
 	//복사
 	data->env_height = ft_env_height(envp);
 	data->env = (char **)malloc(sizeof(char*) * data->env_height + 1);
-	data->env[data->env_height - 1] = NULL;
+	data->env[data->env_height] = NULL;
 	ft_copy_env(envp, data->env);
 	ft_sort_env(data);
 	return ;
@@ -51,6 +51,7 @@ int	main(int argc, char **argv, char **envp)
 	pid = 0;
 	buf = NULL;
 	pipe(fd); // fd[1] >-----------> fd[0]
+	
 	ft_filldata(&data, envp);
 	while(1)
 	{
@@ -69,7 +70,10 @@ int	main(int argc, char **argv, char **envp)
 				break;
 			}
 			else
+			{
+				printf("hello1\n");
 				pid = fork();
+			}
 			if (pid == 0)
 			{
 				dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
@@ -85,7 +89,7 @@ int	main(int argc, char **argv, char **envp)
 			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
 			wait(0);
 			read(fd[0], output, BUFSIZE); // 표준 입력(-현재 fd[0])을 읽어
-			// printf("output = %s", output);
+			printf("output = %s", output);
 			free(data.cmds[i]);
 			i++;
 		}

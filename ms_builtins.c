@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+void	ft_split_free(char **str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+		free(str[i++]);
+	free(str);	
+}
 int		longer_len(char *str, char *str2)
 {
 	int s;
@@ -45,49 +54,59 @@ void	ft_export(t_data *data, char *buf)
 {
 	char	**exp;
 	char	**temp;
-	char	*join;
 	int		i;
 
 	i = 0;
 	if (*(buf + 6)) //	export $USER=ss (환경변수 추가)
 	{
 		exp = ft_split(buf, ' ');
+			printf("=========ppp1\n");
+		// export
+		// hi=u
+		// ue=asdad
+		// NULL   i= 3
 		while (exp[i])
 			i++;
+			printf("=========ppp2\n");
 		temp = (char **)malloc(sizeof(char *) * data->env_height + i);
-		ft_copy_env(data->env, temp);
+		temp[data->env_height + i - 1] = NULL;
+			printf("=========ppp3\n");
+		ft_copy_env(data->env, temp); //segfault 구간
+			printf("=========ppp4\n");
+		ft_split_free(data->env);
+			printf("=========ppp5\n");
 		i = 1;
 		while (exp[i])
 		{
+			printf("=========p1\n");
 			if (ft_strchr(exp[i], '='))
 			{
-				temp[data->env_height++] = exp[i];
+				temp[data->env_height++] = ft_strdup(exp[i]);
 				printf("(((((add_env : %s))))))\n", exp[i]);
 			}
 			else
 			{
-				temp[data->env_height++] = (join = ft_strjoin(exp[i], "=\'\'"));
-				free(join);
+				temp[data->env_height++] = ft_strjoin(exp[i], "=\'\'");
 			}
 			i++;
 		}
-		temp[data->env_height] = NULL;
-		free(data->env);
+		ft_split_free(exp);
+		printf("=========p2\n");
 		data->env = temp;
-		free(exp);
 		free(data->sort_env);
 		ft_sort_env(data);
-	
-		while (data->env[i])
+		printf("=========p3\n");
+		i = 0;
+		while (i < data->env_height)
 			printf("TESTPRINT = %s\n", data->env[data->sort_env[i++]]);
-	
 	}
 	else
 	{
 		while (data->env[i])
 			printf("%s\n", data->env[data->sort_env[i++]]);
 	}
-	// exit(0);
+	printf("=========p4\n");
+
 }
 
 // void	ft_unset()
