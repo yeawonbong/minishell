@@ -1,57 +1,5 @@
 #include "minishell.h"
 
-int     ft_env_height(char **env)
-{
-	int i;
-
-	i = 0;
-	while (env[i])
-		i++;
-	return (i);
-}
-
-void	ft_copy_env(char **src, char **dest)
-{
-	int	i;
-
-	i = 0;
-	// if (**dest)
-	// 	ft_split_free(dest);
-	while (src[i])
-	{
-		dest[i] = ft_strdup(src[i]);
-		i++;
-	}
-	// ft_split_free(src);
-	return ;
-}
-
-void	ft_filldata(t_data *data, char **envp) //이름수정할래
-{
-	// -3 / 3
-	// -
-	// -
-	// - NULL
-	//복사
-	int		i;
-
-	i = 0;
-	data->env_height = ft_env_height(envp);
-	data->env = (char **)malloc(sizeof(char*) * (data->env_height + 1));
-	data->env[data->env_height] = NULL;
-	printf("height=%d\n", data->env_height);
-	while (envp[i])
-	{
-		data->env[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	// printf("iii=%d\n", i);
-	// // ft_copy_env(envp, data->env);
-	ft_sort_env(data);
-	return ;
-}
-
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
@@ -72,22 +20,34 @@ int	main(int argc, char **argv, char **envp)
 	while(1)
 	{
 		buf = readline("minishell $ "); //경로 넣어주기!! 해야함
+		printf("buf = %s|\n", buf);
 		if (*buf)
 			add_history(buf);
-		data.cmds = ft_split(buf, '|');
+		
+		data.cmds = ft_split(buf, '|'); //cmd token
 		printf("cmds[0] = %s\n", data.cmds[0]);
 		i = 0;
 		while (data.cmds[i]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
 		{
 			ft_memset(output, 0, BUFSIZE);
-			if (!(ft_strncmp(buf, "export", 6)))
+			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
 			{
 				ft_export(&data, buf); //unset
 				break;
 			}
+			else if ((ft_strncmp(buf, "env", longer_len("env", buf)) == 0))
+			{
+				ft_env(&data, buf);
+				break;
+			}
+			// if (!(ft_env(buf, "env", 3)) && (!*(buf + 3) || *(buf + 3) == ' '))
+			// {
+			// 	ft_env(&data, buf);
+			// 	break;
+			// }
 			else
 			{
-				printf("hello1\n");
+				printf("fork!\n");
 				pid = fork();
 			}
 			if (pid == 0)

@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/08/10 17:34:45 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/08/15 17:48:54 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,12 @@ void			run_cmd(char **envp, t_data *data)
 	char		**paths;
 
 	paths = get_path(envp);
-	if (data->path != 0)
+	if (data->idx > 0)
 		free(data->path);
-	if (data->cmd_args != 0)
-	 	split_free(data->cmds);
+	if (data->idx > 0)
+	 	split_free(data->cmd_args);
 	data->idx = 0;
-	data->cmd_args = ft_split(data->cmds[data->idx], ' ');
+	data->cmd_args = ft_split(data->cmds[data->idx], ' '); // 토큰화
 	data->path = path_join(paths, data->cmd_args[0]); // ((ls,  -l, NULL),   grep "hello", NULL)
 	if (data->path > 0)
 	{

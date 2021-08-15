@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/06 18:14:50 by ybong             #+#    #+#             */
-/*   Updated: 2021/08/13 20:13:56 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/08/15 02:13:09 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	dst = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!(s1 && s2) || !dst)
+	if (!dst) // || !(s1 && s2)
 		return (0);
 	i = 0;
 	while (s1[i])
