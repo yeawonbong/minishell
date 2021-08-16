@@ -2,11 +2,11 @@
 
 void    ft_env(t_data *data, char *buf)
 {
-    int i;
+	int i;
 
-    i = 0;
-    while (data->env[i])
-    {
-        printf("%s\n", data->env[i++]);
-    }
+	i = 0;
+	while (data->env[i])
+	{
+		printf("%s\n", data->env[i++]);
+	}
 }

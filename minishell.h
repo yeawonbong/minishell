@@ -35,6 +35,13 @@ void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
 void	ft_filldata(t_data *data, char **envp); //이름수정할래
 
+
+/*
+**  ms_modify_buf.c
+*/
+char	*ft_replace_var(t_data *data, char *var);
+char	*ft_modify_buf(t_data *data, char *buf);
+
 /*
 **  ms_run_cmd.c
 */
@@ -48,6 +55,7 @@ char	*ft_replace(t_data *data, char *var);
 char	*ft_replace_envar(t_data *data, char *envar);
 void	ft_export(t_data *data, char *buf);
 void	ft_env(t_data *data, char *buf);
+
 
 /*
 **	ms_utils.c

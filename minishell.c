@@ -9,7 +9,6 @@ int	main(int argc, char **argv, char **envp)
 	int		i;
 	char	output[BUFSIZE];
 
-//초반에 env_sort 세팅
 	if (1 < argc || argv[1])
 		return (0);
 	pid = 0;
@@ -20,58 +19,61 @@ int	main(int argc, char **argv, char **envp)
 	while(1)
 	{
 		buf = readline("minishell $ "); //경로 넣어주기!! 해야함
-		printf("buf = %s|\n", buf);
+		printf("original buf = %s|\n", buf);
 		if (*buf)
 			add_history(buf);
-		
-		data.cmds = ft_split(buf, '|'); //cmd token
-		printf("cmds[0] = %s\n", data.cmds[0]);
-		i = 0;
-		while (data.cmds[i]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
-		{
-			ft_memset(output, 0, BUFSIZE);
-			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
-			{
-				ft_export(&data, buf); //unset
-				break;
-			}
-			else if ((ft_strncmp(buf, "env", longer_len("env", buf)) == 0))
-			{
-				ft_env(&data, buf);
-				break;
-			}
-			// if (!(ft_env(buf, "env", 3)) && (!*(buf + 3) || *(buf + 3) == ' '))
-			// {
-			// 	ft_env(&data, buf);
-			// 	break;
-			// }
-			else
-			{
-				printf("fork!\n");
-				pid = fork();
-			}
-			if (pid == 0)
-			{
-				dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
-				close(fd[0]);
-				if (!(ft_strncmp(buf, "export", 6)))
-					ft_export(&data, buf); //unset
-				else
-				{
-					run_cmd(envp, &data);
-					if (execve(data.path, data.cmd_args, envp) == -1)
-						perror("execve error :");
-				}
-			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
-			wait(0);
-			read(fd[0], output, BUFSIZE); // 표준 입력(-현재 fd[0])을 읽어
-			printf("output = %s", output);
-			free(data.cmds[i]);
-			i++;
-		}
-		free(buf);
-		free(data.cmds);
+		buf = ft_modify_buf(&data, buf);
+		printf("modified buf = %s|\n", buf);
+		// data.cmds = ft_split(buf, '|'); //cmd token -> |랑 ;단위로 쪼개야함.
+		// printf("cmds[0] = %s\n", data.cmds[0]);
+		// i = 0;
+		// while (data.cmds[i]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
+		// {
+		// 	ft_memset(output, 0, BUFSIZE);
+		// 	if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
+		// 	{
+		// 		ft_export(&data, buf); //unset
+		// 		break;
+		// 	}
+		// 	else if ((ft_strncmp(buf, "env", longer_len("env", buf)) == 0))
+		// 	{
+		// 		ft_env(&data, buf);
+		// 		break;
+		// 	}
+		// 	// if (!(ft_env(buf, "env", 3)) && (!*(buf + 3) || *(buf + 3) == ' '))
+		// 	// {
+		// 	// 	ft_env(&data, buf);
+		// 	// 	break;
+		// 	// }
+		// 	else
+		// 	{
+		// 		printf("fork!\n");
+		// 		pid = fork();
+		// 	}
+		// 	if (pid == 0)
+		// 	{
+		// 		dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
+		// 		close(fd[0]);
+		// 		if (!(ft_strncmp(buf, "export", 6)))
+		// 			ft_export(&data, buf); //unset
+		// 		else
+		// 		{
+		// 			// check_redir(&data, i);
+		// 			run_cmd(envp, &data);
+		// 			if (execve(data.path, data.cmd_args, envp) == -1)
+		// 				perror("execve error :");
+		// 		}
+		// 	}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
+		// 	wait(0);
+		// 	read(fd[0], output, BUFSIZE); // 표준 입력(-현재 fd[0])을 읽어
+		// 	printf("output = %s", output);
+		// 	free(data.cmds[i]);
+		// 	i++;
+		// }
+		// free(buf);
+		// free(data.cmds);
 	}
+	return (0);
 }
 // cat < file1
 // grep "hello"

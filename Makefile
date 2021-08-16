@@ -6,11 +6,12 @@
 #    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/08/15 15:42:41 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/08/16 18:15:51 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = minishell.c\
+ms_modify_buf.c\
 ms_export.c\
 ms_fill_data.c\
 ms_run_cmd.c\
