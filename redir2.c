@@ -1,3 +1,5 @@
+#include "minishell.h"
+
 int     get_argc(char *cmds)
 {
 	int i;
@@ -52,10 +54,6 @@ void	reidr_3(t_data *data, char **cmd_args, int cmd_argc)
 
 int     f_redir(t_data *data, int idx)
 {
-	int cmds_argc;
-	char **cmd_args;
-
-	cmds_argc = get_argc(cmd_args);
 	if (cmds_argc == 1)
 		return (0);
 	cmd_args = ft_split(data->cmds[idx], ' ');
@@ -70,10 +68,36 @@ int     f_redir(t_data *data, int idx)
 	return (1);
 }
 
+void	parsing_cmd(char *cmd_args, int idx)
+{
+	int	i;
+
+	i = 0;
+	if (idx == 0)
+	{
+		while (cmd_args[idx + 1])
+	}
+}
 void    check_redir(t_data *data, int idx)
 {
-    while (data->redir)
-    {
+	int		i;
+	int		j;
+	int cmds_argc;
+	char **cmd_args;
 
+	cmds_argc = get_argc(cmd_args);
+	i = 1;
+	cmd_args = ft_split(data->cmds[idx], ' ');
+    while (cmd_args[i])
+    {
+		j = 0;
+		while (cmd_args[i][j])
+		{
+			if (ft_strchr("<>", cmd_args[i][j]))
+			{
+				parsing_cmd(cmd_args[i], j);
+			}
+		}
+		cmd_args[i]
     }
 }
