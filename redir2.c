@@ -75,7 +75,10 @@ void	parsing_cmd(char *cmd_args, int idx)
 	i = 0;
 	if (idx == 0)
 	{
-		while (cmd_args[idx + 1])
+		while (cmd_args[idx + i])
+		{
+			
+		}
 	}
 }
 void    check_redir(t_data *data, int idx)
@@ -84,7 +87,10 @@ void    check_redir(t_data *data, int idx)
 	int		j;
 	int cmds_argc;
 	char **cmd_args;
+	char *temp;
+	int		flag;
 
+	temp = NULL;
 	cmds_argc = get_argc(cmd_args);
 	i = 1;
 	cmd_args = ft_split(data->cmds[idx], ' ');
@@ -93,11 +99,19 @@ void    check_redir(t_data *data, int idx)
 		j = 0;
 		while (cmd_args[i][j])
 		{
-			if (ft_strchr("<>", cmd_args[i][j]))
+			if (ft_strchr("<>", data->cmds[i][j]))
 			{
-				parsing_cmd(cmd_args[i], j);
 			}
+			j++;
 		}
+		if (flag == 0)
+		{
+			if (temp == NULL)
+				ft_strlcpy(temp, data->cmds[i], ft_strlen(data->cmds[i]));
+			else
+				
+		}
+
 		cmd_args[i]
     }
 }
