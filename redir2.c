@@ -75,11 +75,9 @@ void	parsing_cmd(char *cmd_args, int idx)
 	i = 0;
 	if (idx == 0)
 	{
-		while (cmd_args[idx + i])
-		{
-			
-		}
-	}
+		while (cmd_args[idx + i + 1] && !(ft_strchr("<>", cmd_args[idx + i + 1])))
+			i++;
+	}1
 }
 void    check_redir(t_data *data, int idx)
 {

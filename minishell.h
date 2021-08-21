@@ -12,7 +12,7 @@
 
 #define BUFSIZE 4000 //max_buf ? 
 
-typedef	struct		s_data
+typedef	struct	s_data
 {
 	char	**cmds; //cmd 토큰 cat aa | grep a
 	char	**cmd_args; // 토큰 cat . aa
@@ -21,7 +21,20 @@ typedef	struct		s_data
 	int		*sort_env;
 	char	*path;
 	int		idx;
-}					t_data;
+}				t_data;
+
+typedef struct	s_envar
+{
+	char	*var;
+	char	*buf;
+	char	*modified;
+	char	*newvar;
+	char	*newbuf;
+}				t_envar;
+
+
+
+
 
 /*
 ** minishell.c

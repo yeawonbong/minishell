@@ -33,29 +33,37 @@
 
 
 //호출 할 때 , if (ft_strchr(buf, '$')
+
+char	*cut_with(char c, t_envar *envar)
+{
+	envar->var = ft_strchr(buf, '$') + 1;
+
+}
+
+// 호출부 - if (ft_strchr(buf, '$')) 환경변수 잇을 때만 들어오기. 
 char	*ft_replace_var(t_data *data, char *buf)
 {
+	char	*modified;
 	char	*var;
-	char	*newvar;
 	char	*newbuf;
+	char	*temp;
 	int	i;
 	int	j;
 
-//asdasds$USERasd$
-	i = 0;
+//sds$USERasd$
 	j = 0;
 
-	var = ft_strchr(buf, '$') + 1;
+while (ft_strchr(newbuf, '$'))
+{
+	i = 0;
+	while (*(newbuf + i) != '$')
+		i++;
+	modified = ft_strjoin(modified, ft_substr(newbuf, 0, i)); // free해야함
+	var = newbuf + i + 1;
 	if (*var == '$') // $$
 	{
-		newvar = ft_strdup(ft_itoa(getpid()));
-		newbuf = ft_strdup(var + 2);
-		// else
-		// {
-		// 	newvar = ft_strdup("$");
-		// 	newbuf = ft_strdup(var + 1);
-		// }
-	//끝내서 나가기. 
+		var = ft_strdup(ft_itoa(getpid()));
+		newbuf = var + 2;
 	}
 	else
 	{
@@ -66,10 +74,11 @@ char	*ft_replace_var(t_data *data, char *buf)
 			var = ft_substr(var, 0, i);
 		else
 		{
-			newvar = ft_strdup("$");
-			newbuf = ft_strdup(var + 1);
+			var = ft_strdup("$");
+			newbuf = var + 1;
 		}
-		newbuf = ft_strdup(buf + i);
+		newbuf = buf + i; // 환경변수 다음으로 이동 
+		free(buf);
 		while (data->env[i])
 		{//USER=hi
 			while (data->env[i][j] && data->env[i][j] != '=')
@@ -77,15 +86,20 @@ char	*ft_replace_var(t_data *data, char *buf)
 			if (!ft_strncmp(data->env[i], var, ft_strlen(var))) //같으면
 			{
 				free(var);
-				newvar = ft_strdup(data->env[i] + j + 1);
+				var = ft_strdup(data->env[i] + j + 1);
+				break;
 			}
 			j = 0;
 			i++;
 		}
-		newvar = ft_strdup("");
+		if (!data->env[i])
+			var = ft_strdup("");
 	}
-	free(buf);
-	buf = ft_strjoin(newvar, newbuf);
+	// free(buf);
+	temp = ft_strjoin(modified, var);
+	free(modified);
+	modified = temp;
+	free(temp);
 	return (buf);
 	// return (NULL); //env에 환경변수가 없을 때 NULL 로 replace
 }
@@ -105,7 +119,6 @@ char	*ft_modify_buf(t_data *data, char *buf) // ft_tokenize; // ft_split_args
 			i++;
 		modified = ft_substr(buf, 0, i);
 			printf("1\n");
-
 	}
 	else // if (i == 0) // $가 없거나, 아니면 첫번째 자리가 $일 경우.
 		modified = ft_strdup("");
@@ -122,7 +135,6 @@ printf("3\n");
 		else
 		{
 			var = ft_substr(after_var, 0, i);
-			printf("HERE\n");
 			temp = (ft_strjoin(modified, ft_replace_var(data, var)));
 			free(modified);
 			free(var);
