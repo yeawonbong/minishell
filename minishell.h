@@ -32,6 +32,15 @@ typedef struct	s_envar
 	char	*newbuf;
 }				t_envar;
 
+typedef struct	s_utils
+{
+	char	*ret;
+	char	*subs;
+	char	*join;
+	int		len;
+	int		idx;
+}				t_utils;
+
 
 
 

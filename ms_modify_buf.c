@@ -34,10 +34,18 @@
 
 //호출 할 때 , if (ft_strchr(buf, '$')
 
-char	*cut_with(char c, t_envar *envar)
-{
-	envar->var = ft_strchr(buf, '$') + 1;
+// char	*cut_with(char c, t_envar *envar)
+// {
+// 	envar->var = ft_strchr(buf, '$') + 1;
 
+// }
+
+char	*ft_join_free(char *str1, char *str2)
+{
+	char	*temp;
+
+	temp = ft_strjoin(str1, str2);
+	
 }
 
 // 호출부 - if (ft_strchr(buf, '$')) 환경변수 잇을 때만 들어오기. 
@@ -51,57 +59,61 @@ char	*ft_replace_var(t_data *data, char *buf)
 	int	j;
 
 //sds$USERasd$
-	j = 0;
-
-while (ft_strchr(newbuf, '$'))
-{
 	i = 0;
-	while (*(newbuf + i) != '$')
-		i++;
-	modified = ft_strjoin(modified, ft_substr(newbuf, 0, i)); // free해야함
-	var = newbuf + i + 1;
-	if (*var == '$') // $$
+	j = 0;
+	modified = ft_strdup("");
+	newbuf = buf;
+	while (ft_strchr(newbuf, '$'))
 	{
-		var = ft_strdup(ft_itoa(getpid()));
-		newbuf = var + 2;
-	}
-	else
-	{
-		var++;
-		while (ft_isdigit(*(var + i)) || ft_isalpha(*(var + i)))
+		i = 0;
+		while (*(newbuf + i) != '$')
 			i++;
-		if (i)
-			var = ft_substr(var, 0, i);
+		newbuf += i + 1; // $ 다음을 가리킨다. 
+		modified = ft_strjoin(modified, ft_substr(newbuf, 0, i)); // free해야함
+		// var = newbuf;
+		if (*newbuf == '$') // $$
+		{
+			var = ft_strdup(ft_itoa(getpid()));
+			newbuf++;
+		}
 		else
 		{
-			var = ft_strdup("$");
-			newbuf = var + 1;
-		}
-		newbuf = buf + i; // 환경변수 다음으로 이동 
-		free(buf);
-		while (data->env[i])
-		{//USER=hi
-			while (data->env[i][j] && data->env[i][j] != '=')
-				j++; // env에서 앞에 인자 범위 알아내기 (ex_ yb=ybong 이라면 yb까지 끊기 위한 것)
-			if (!ft_strncmp(data->env[i], var, ft_strlen(var))) //같으면
+			i = 0;
+			while (ft_isdigit(*(newbuf + i)) || ft_isalpha(*(newbuf + i)))
+				i++;
+			if (i)
+				var = ft_substr(newbuf, 0, i);
+			else
 			{
-				free(var);
-				var = ft_strdup(data->env[i] + j + 1);
-				break;
+				var = ft_strdup("$");
+				newbuf = var + 1;
 			}
-			j = 0;
-			i++;
+			newbuf = buf + i; // 환경변수 다음으로 이동 
+			// free(buf);
+			while (data->env[i])
+			{//USER=hi
+				while (data->env[i][j] && data->env[i][j] != '=')
+					j++; // env에서 앞에 인자 범위 알아내기 (ex_ yb=ybong 이라면 yb까지 끊기 위한 것)
+				if (!ft_strncmp(data->env[i], var, ft_strlen(var))) //같으면
+				{
+					free(var);
+					var = ft_strdup(data->env[i] + j + 1);
+					break;
+				}
+				j = 0;
+				i++;
+			}
+			if (!data->env[i])
+				var = ft_strdup("");
 		}
-		if (!data->env[i])
-			var = ft_strdup("");
+		// free(buf);
+		temp = ft_strjoin(modified, var);
+		free(modified);
+		modified = temp;
+		free(temp);
+		return (buf);
+		// return (NULL); //env에 환경변수가 없을 때 NULL 로 replace
 	}
-	// free(buf);
-	temp = ft_strjoin(modified, var);
-	free(modified);
-	modified = temp;
-	free(temp);
-	return (buf);
-	// return (NULL); //env에 환경변수가 없을 때 NULL 로 replace
 }
 
 char	*ft_modify_buf(t_data *data, char *buf) // ft_tokenize; // ft_split_args

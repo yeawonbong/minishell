@@ -22,6 +22,8 @@ int	main(int argc, char **argv, char **envp)
 		printf("original buf = %s|\n", buf);
 		if (*buf)
 			add_history(buf);
+		if (ft_strchr(buf))
+			printf("modified buf = %s|\n", ft_replace_var(buf));
 		buf = ft_modify_buf(&data, buf);
 		printf("modified buf = %s|\n", buf);
 		// data.cmds = ft_split(buf, '|'); //cmd token -> |랑 ;단위로 쪼개야함.

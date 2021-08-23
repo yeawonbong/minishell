@@ -77,39 +77,4 @@ void	parsing_cmd(char *cmd_args, int idx)
 	{
 		while (cmd_args[idx + i + 1] && !(ft_strchr("<>", cmd_args[idx + i + 1])))
 			i++;
-	}1
-}
-void    check_redir(t_data *data, int idx)
-{
-	int		i;
-	int		j;
-	int cmds_argc;
-	char **cmd_args;
-	char *temp;
-	int		flag;
-
-	temp = NULL;
-	cmds_argc = get_argc(cmd_args);
-	i = 1;
-	cmd_args = ft_split(data->cmds[idx], ' ');
-    while (cmd_args[i])
-    {
-		j = 0;
-		while (cmd_args[i][j])
-		{
-			if (ft_strchr("<>", data->cmds[i][j]))
-			{
-			}
-			j++;
-		}
-		if (flag == 0)
-		{
-			if (temp == NULL)
-				ft_strlcpy(temp, data->cmds[i], ft_strlen(data->cmds[i]));
-			else
-				
-		}
-
-		cmd_args[i]
-    }
-}
+	}
