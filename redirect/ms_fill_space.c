@@ -9,7 +9,7 @@ void	r_utils_init(t_utils *r_u)
 	r_u->idx = 0;
 }
 
-void	ft_strjoin_free(t_utils *r_u, char *str)
+void	ft_retjoin_free(t_utils *r_u, char *str)
 {
 	char	*temp;
 
@@ -32,7 +32,7 @@ void	get_parse(t_utils *r_u, int flag, char *cmds)
 	}
 	else if (cmds[r_u->idx] == '<')
 		r_u->join = ft_strjoin(r_u->subs, " < ");
-	ft_strjoin_free(r_u, r_u->join);
+	ft_retjoin_free(r_u, r_u->join);
 	r_u->len = 0;
 }
 
@@ -57,23 +57,23 @@ char	*parse_redir(char *cmds)
 	{
 		free(r_u.subs);
 		r_u.subs = ft_substr(cmds, r_u.idx - r_u.len + flag, r_u.len - flag);
-		ft_strjoin_free(&r_u, r_u.subs);
+		ft_retjoin_free(&r_u, r_u.subs);
 	}
 	free(r_u.join);
 	free(r_u.subs);
 	return (r_u.ret);
 }
 
-int main(void)
-{
-    char *str = ">< >cat>hi>>>>hi>dydy nlnl< > >>";
-    char *s;
+// int main(void)
+// {
+//     char *str = ">< >cat>hi>>>>hi>dydy nlnl< > >>";
+//     char *s;
 
-    s = parse_redir(str);
-    printf("%s|\n", s);
-    while (1)
-    {
+//     s = parse_redir(str);
+//     printf("%s|\n", s);
+//     while (1)
+//     {
 
-    }
-    return (0);
-}
+//     }
+//     return (0);
+// }

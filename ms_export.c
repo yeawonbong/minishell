@@ -1,147 +1,110 @@
 #include "minishell.h"
 
-char	*ft_reunion(char **strarr, int strnum)
-{
-	char	*ret;
-	char	*temp;
-	int	i;
-
-	ret = ft_strdup(strarr[0]);
-	i = 1;
-	while (i < strnum)
-	{
-		temp = ft_strjoin(temp, strarr[i]);
-		free (ret);
-		ret = temp;
-		i++;
-	}
-	return (ret);
-}
-
-char	*ft_replace(t_data *data, char *var)
-{
-	int	i;
-	int	j;
-/*
-$USER
-
-**env
-sma=aaasds
-USER=ybong
-*/
-	i = 0;
-	j = 0;
-	while (data->env[i])
-	{
-		while (data->env[i][j] && data->env[i][j] != '=')
-			j++;
-		if (!ft_strncmp(data->env[i], var, ft_strlen(var)))
-		{
-			free(var);
-			var = ft_strdup(data->env[i] + j + 1);
-			return (var);
-		}
-		j = 0;
-		i++;
-	}
-	return (NULL);
-}
-
-char	*ft_replace_envar(t_data *data, char *envar)
-{
-	char    **split_equal;
-	char	**split_dollar;
-
-	char    *var;
-	char	*replace;
-	int		tojoin;
-	int 	i;
-	int		j;
-
-//s$USERma$sddf$asads="asd$USERas=asdads"
-	i = 0;
-	j = 0;
-	split_equal = (char**)malloc(sizeof(char*) * 3);
-	split_equal[2] = NULL;
-	while (envar[i] == '=')
-		i++; //equal index
-	split_equal[0] = ft_substr(envar, 0, i);
-	split_equal[1] = ft_strdup(&envar[i + 1]); // =기준으로 자름
-	i = 0;
-	while (i < 2)
-	{
-		if (*split_equal[i] == '$')
-			tojoin = 1;
-		if (ft_strchr(split_equal[i], '$'))
-			split_dollar = ft_split(split_equal[i], '$');
-		while (split_dollar[tojoin])
-		{
-			split_dollar[tojoin] = ft_replace(data, split_dollar[tojoin]); //없으면 0 들어감
-			tojoin++;
-		}
-		free(split_equal[i]);
-		split_equal[i] = ft_reunion(split_dollar, tojoin);
-		tojoin = 0;
-		i++;
-	}
-	char *res;
-	res = ft_reunion(split_equal, 2);
-	return (res);
-	//return (ft_reunion(split_equal, 2));
-	//split equals 합쳐
-			//sma=ar$USER
-}
-
 void	ft_export(t_data *data, char *buf)
 {
-	char	**exp;
-	char	**temp;
+	char	**exp_arg;
+	char	**tempenv;
+	int		add;
 	int		i;
 
-	exp = ft_split(buf, ' ');
+	exp_arg = ft_split(buf, ' ');
+	add = 0;
 	i = 0;
-	while (exp[i])
+	while (exp_arg[i])
+	{
+		if (ft_strchr(exp_arg[i], '='))
+			add++;
 		i++;
+	}
 	if (i == 1) // 그냥 export면 출력
 	{
+		i = 0;
 		while (data->env[i])
 			printf("%s\n", data->env[data->sort_env[i++]]);
-		free(exp[0]);
 	}
 	else // export 뒤에 인자가 있다면 -> 환경변수 추가
 	{
-		temp = (char **)malloc(sizeof(char *) * (data->env_height + i));// 2갠데 null까지 3
-		temp[data->env_height + i - 1] = NULL;
-		ft_copy_env(data->env, temp);
+		tempenv = (char **)malloc(sizeof(char *) * (data->env_height + add + 1));// 2갠데 null까지 3
+		// tempenv[data->env_height + add - 1] = NULL;
+		ft_copy_env(data->env, tempenv);
 		i = 1;
-		while (exp[i])
+		while (exp_arg[i])
 		{
-			// if ('')
-				//sma=aaa$USER
-			if (*exp[i] == '=')
+			if (*exp_arg[i] == '=')
 			{
 				printf("minishell: bad assignment\n");
 				return ;
 			}
-			else if (ft_strchr(exp[i], '='))
+			else if (ft_strchr(exp_arg[i], '='))
 			{
-				if (ft_strchr(exp[i], '$')) 
-				{	
-					free(exp[i]);
-					exp[i] = ft_replace_envar(data, exp[i]); // 환경변수 있으면 replace
-				}
-				printf("add_env = %s, (i = %d)\n", exp[i], i);
-				temp[data->env_height] = ft_strdup(exp[i]); // add_envar
+				printf("add_env = %s, (i = %d)\n", exp_arg[i], i);
+				tempenv[data->env_height] = ft_strdup(exp_arg[i]); // add_envar
 				data->env_height++;
-			}
-			// else // = 가 없는 경우? 넣을까 말까 - 안넣는 쪽으로 생각중
+			}			// else // = 가 없는 경우? 넣을까 말까 - 안넣는 쪽으로 생각중
 			i++;
 		}
-		temp[data->env_height] = NULL;
+		tempenv[data->env_height] = NULL;
 		ft_split_free(data->env);
-		data->env = temp;
+		data->env = tempenv;
 		free(data->sort_env);
 		ft_sort_env(data);
 	}
-	free(exp);
+	free(exp_arg);
+}
+
+void	ft_unset(t_data *data, char *buf)
+{
+	char	**unset_arg;
+	char	**tempenv;
+	char	*var;
+	int		i;
+	int		j;
+	int		k;
+	int		t;
+
+	tempenv = NULL;
+	i = 0;
+	t = 0;
+	unset_arg = ft_split(buf, ' '); 
+	while (unset_arg[i]) // count vars to unset
+		i++;
+	if (i == 1)
+	{
+		ft_putstr_fd("unset: not enough arguments\n", STDOUT_FILENO);
+		// return ;
+	}
+	else
+	{
+		data->env_height -= --i;
+		printf("HEIGHT = %d\n", data->env_height);
+		tempenv = (char **)malloc(sizeof(char *) * (data->env_height + 1));
+		tempenv[data->env_height] = NULL;
+		i = 0;//unset >USER PATH
+		while (data->env[i])
+		{
+			j = 0;
+			while(data->env[i][j] != '=')
+				j++;
+			var = ft_substr(data->env[i], 0, j);
+			k = 1;
+			while (unset_arg[k])
+			{
+				if (!ft_strncmp(var, unset_arg[k], longer_len(var, unset_arg[k]))) // 같으면
+					break;
+				k++;
+			}
+			if (!unset_arg[k])
+			{
+				tempenv[t] = ft_strdup(data->env[i]); //++?
+				t++;
+			}
+			i++;
+		}
+		free(var);
+		ft_split_free(data->env);
+		data->env = tempenv;
+		free(data->sort_env);
+		ft_sort_env(data);
+	}
+	ft_split_free(unset_arg);
 }

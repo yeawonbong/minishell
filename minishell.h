@@ -20,17 +20,8 @@ typedef	struct	s_data
 	int		env_height;
 	int		*sort_env;
 	char	*path;
-	int		idx;
+	int		idx; //cmd의 idx
 }				t_data;
-
-typedef struct	s_envar
-{
-	char	*var;
-	char	*buf;
-	char	*modified;
-	char	*newvar;
-	char	*newbuf;
-}				t_envar;
 
 typedef struct	s_utils
 {
@@ -40,6 +31,15 @@ typedef struct	s_utils
 	int		len;
 	int		idx;
 }				t_utils;
+
+typedef struct	s_re
+{
+	char	**re_file;
+	char	*cmd_j;
+	int		*re_type;
+	int		re_argc;
+	int		re_count;
+}				t_re;
 
 
 
@@ -57,12 +57,18 @@ void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
 void	ft_filldata(t_data *data, char **envp); //이름수정할래
 
-
 /*
 **  ms_modify_buf.c
 */
 char	*ft_replace_var(t_data *data, char *var);
 char	*ft_modify_buf(t_data *data, char *buf);
+
+/*
+**	ms_env.c
+*/
+void	ft_env(t_data *data);
+void	ft_copy_env(char **src, char **dest);
+void	ft_sort_env(t_data *data);
 
 /*
 **  ms_run_cmd.c
@@ -72,12 +78,8 @@ void			run_cmd(char **envp, t_data *data);
 /*
 **	ms_export.c
 */
-char	*ft_reunion(char **strarr, int strnum);
-char	*ft_replace(t_data *data, char *var);
-char	*ft_replace_envar(t_data *data, char *envar);
 void	ft_export(t_data *data, char *buf);
-void	ft_env(t_data *data, char *buf);
-
+void	ft_unset(t_data *data, char *buf);
 
 /*
 **	ms_utils.c
@@ -85,6 +87,7 @@ void	ft_env(t_data *data, char *buf);
 void	ft_split_free(char **strarr);
 int		longer_len(char *str, char *str2);
 int     ft_strarr_height(char **env);
-
+char*	parse_redir(char *cmds);
+void	get_redirect(char *cmds, t_re *re);
 
 #endif

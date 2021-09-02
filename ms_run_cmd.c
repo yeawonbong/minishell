@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/08/16 18:05:08 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/08/31 17:13:16 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,20 +72,17 @@ char			*path_join(char **paths, char *cmds)
 	return (0);
 }
 
+// ls | grep 
+
 void			run_cmd(char **envp, t_data *data)
 {
 	char		**paths;
-
+	
 	paths = get_path(envp);
-	if (data->idx > 0)
-		free(data->path);
-	if (data->idx > 0)
-	 	split_free(data->cmd_args);
-	data->idx = 0;
-	//ft_split_args //while tokenization, pars "", ''
+	// ft_split_args //while tokenization, pars "", ''
 	data->cmd_args = ft_split(data->cmds[data->idx], ' '); // 토큰화
 	data->path = path_join(paths, data->cmd_args[0]); // ((ls,  -l, NULL),   grep "hello", NULL)
-	if (data->path > 0)
+	if (data->path != 0)
 	{
 		data->idx++;
 		split_free(paths);
