@@ -30,8 +30,10 @@ int	main(int argc, char **argv, char **envp)
 			printf("cmds[%d] = %s\n", n, data.cmds[n]);
 		i = 0;
 		while (data.cmds[i]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
-		{
+		{//data.idx?? 9/3
 			ft_memset(output, 0, BUFSIZE);
+				parsing_cmd(&data, i); //redirect 처리
+		//	if (redirect_flag)
 			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
 			{
 				ft_export(&data, buf);
@@ -53,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 				pid = fork();
 			}
 			if (pid == 0)
-			{
+			{		
 				dup2(fd[1], STDOUT_FILENO); // 표준 출력을 fd[1]로
 				close(fd[0]);
 				// check_redir(&data, i);

@@ -90,4 +90,14 @@ int     ft_strarr_height(char **env);
 char*	parse_redir(char *cmds);
 void	get_redirect(char *cmds, t_re *re);
 
+/*
+**	redirect
+*/
+void	parsing_cmd(t_data *data, int idx);
+char	*parse_redir(char *cmds);
+void	get_redirect(char *cmds, t_re *re);
+
+
+
+
 #endif

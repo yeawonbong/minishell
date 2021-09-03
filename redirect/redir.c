@@ -63,21 +63,20 @@ int     redir_exec(t_re *re)
 	return (1);
 }
 
-void	parsing_cmd(t_data *data, char **envp, int idx)
+void	parsing_cmd(t_data *data, int idx)
 {
 	t_re re;
 
 	get_redirect(data->cmds[idx], &re);
 	free(data->cmds[idx]);
 	data->cmds[idx] = re.cmd_j;
-	printf("cmd = %s|\n", cmds);
 	redir_exec(&re);
-	run_cmd(envp, data);
-	if (execve(data->path, ft_split(data->cmds, ' '), envp) == -1)
-	{
-		perror("error : ");
-	}
 }
+
+
+//1. red - cmd
+//2. red // cmd
+
 
 // int		main(int argc, char **argv, char **envp)
 // {

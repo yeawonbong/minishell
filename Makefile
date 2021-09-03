@@ -6,7 +6,7 @@
 #    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/08/31 17:19:20 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/09/03 18:58:43 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,16 @@ ms_export.c\
 ms_fill_data.c\
 ms_run_cmd.c\
 ms_utils.c\
-ms_env.c
+ms_env.c\
+redirect/re_insert_space.c\
+redirect/re_get_re.c\
+redirect/redir.c
 
 CC = gcc
 CFLAGS = -fsanitize=address -Wall -Wextra -Werror 
 AR = ar rcs
 NAME = minishell.a
-OBJS = $(SRCS:.c=.o)
+OBJS = *.o  #$(SRCS:.c=.o)
 OUT = minishell
 
 LIB = libft.a
