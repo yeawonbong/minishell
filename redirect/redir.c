@@ -71,6 +71,7 @@ void	parsing_cmd(t_data *data, int idx)
 	free(data->cmds[idx]);
 	data->cmds[idx] = re.cmd_j;
 	redir_exec(&re);
+
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/08/31 17:13:16 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/04 16:56:29 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char			**get_path(char **envp)
 
 char			*path_join(char **paths, char *cmds)
 {
-	char		*p;
+	char		*path;
 	char		*temp;
 	int			i;
 	int			fd;
@@ -55,15 +55,15 @@ char			*path_join(char **paths, char *cmds)
 	while (paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
-		p = ft_strjoin(temp, cmds);
-		fd = open(p, O_RDONLY);
+		path = ft_strjoin(temp, cmds);
+		fd = open(path, O_RDONLY);
 		if (fd > 0)
 		{
 			free(temp);
-			return (p);
+			return (path);
 		}
 		free(temp);
-		free(p);
+		free(path);
 		close(fd);
 		i++;
 	}
@@ -81,14 +81,13 @@ void			run_cmd(char **envp, t_data *data)
 	paths = get_path(envp);
 	// ft_split_args //while tokenization, pars "", ''
 	data->cmd_args = ft_split(data->cmds[data->idx], ' '); // 토큰화
+	// printf("cmds = %s, idx = %d\n", data->cmds[data->idx], data->idx);
 	data->path = path_join(paths, data->cmd_args[0]); // ((ls,  -l, NULL),   grep "hello", NULL)
 	if (data->path != 0)
 	{
-		data->idx++;
 		split_free(paths);
 		return ;
 	}
 	split_free(data->cmds);
-	data->idx++;
 	split_free(paths);
 }

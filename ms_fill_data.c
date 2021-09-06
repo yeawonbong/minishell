@@ -21,6 +21,8 @@ void	ft_filldata(t_data *data, char **envp) //이름수정할래
 		data->env[i] = ft_strdup(envp[i]);
 		i++;
 	}
+	data->stdio[0] = dup(STDIN_FILENO);
+	data->stdio[1] = dup(STDOUT_FILENO);
 	// printf("iii=%d\n", i);
 	// // ft_copy_env(envp, data->env);
 	ft_sort_env(data);

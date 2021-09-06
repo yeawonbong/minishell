@@ -21,6 +21,9 @@ typedef	struct	s_data
 	int		*sort_env;
 	char	*path;
 	int		idx; //cmd의 idx
+	int		stdio[2];
+	int		redirect_flag;
+	int		pipe_flag;
 }				t_data;
 
 typedef struct	s_utils
@@ -41,7 +44,11 @@ typedef struct	s_re
 	int		re_count;
 }				t_re;
 
-
+// typedef struct s_fd
+// {
+// 	int	stdin_origin;
+// 	int	stdout_origin;
+// }
 
 
 
