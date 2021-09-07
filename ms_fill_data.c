@@ -23,6 +23,8 @@ void	ft_filldata(t_data *data, char **envp) //이름수정할래
 	}
 	data->stdio[0] = dup(STDIN_FILENO);
 	data->stdio[1] = dup(STDOUT_FILENO);
+	data->pipe_flag = 0;
+	data->redirect_flag = 0;
 	// printf("iii=%d\n", i);
 	// // ft_copy_env(envp, data->env);
 	ft_sort_env(data);

@@ -7,7 +7,8 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	pid = 0;
 	int		fd[2]; 
 	int		i;
-	int		flag = 0;
+	int		temp[2];
+	// int		flag = 0;
 	char	output[BUFSIZE];
 
 	if (1 < argc || argv[1])
@@ -15,15 +16,19 @@ int	main(int argc, char **argv, char **envp)
 	pid = 0;
 	buf = NULL;
 	ft_filldata(&data, envp);
+	temp[0] = dup(STDIN_FILENO);
+	temp[1] = dup(STDOUT_FILENO);
 	while(1)
 	{
 		buf = readline("minishell $ "); //경로 넣어주기!! 해야함
 		printf("original buf = %s|\n", buf);
+	
 		if (*buf)
 			add_history(buf);
-		if (ft_strchr(buf, '$'))
+		if (ft_strchr(buf, '$') && *buf)
 			buf = ft_modify_buf(&data, buf);
 		printf("modified buf = %s|\n", buf);
+
 		data.pipe_flag = 0;
 		i = 0;
 		while (buf[i])
@@ -36,6 +41,7 @@ int	main(int argc, char **argv, char **envp)
 		printf("flag = %d\n", data.pipe_flag);
 		data.cmds = ft_split(buf, '|'); //cmd token -> |랑 ;단위로 쪼개야함.
 		i = 0;
+		data.idx = 0;
 		while (data.cmds[data.idx]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
 		{
 			pipe(fd); // fd[1] >-----------> fd[0]
@@ -64,70 +70,43 @@ int	main(int argc, char **argv, char **envp)
 			{
 				printf("fork!\n");
 				printf("current cmd = %s, idx = %d\n", data.cmds[data.idx], data.idx);
-				pid = fork();				
+				pid = fork();
 			}
 			if (pid == 0)
 			{
 				if (data.pipe_flag)
 				{
-					if (data.idx > 0)
-					{
-						// printf("hello\n");
-						close(fd[1]);
-						dup2(fd[0], STDIN_FILENO);
-						read(0, output, BUFSIZE);
-						printf("output2 = %s\n", output);
-						// close(old_fd[0]);
-						// close(old_fd[1]);
-					}
 					if (data.cmds[data.idx + 1] != NULL)
 					{
-						close(fd[0]);
 						dup2(fd[1], STDOUT_FILENO);
-						// close(fd[1]);
+						close(fd[0]);
+						close(fd[1]);
 					}
 				}
 				// < 
 				run_cmd(envp, &data);
-				printf("run_cmd\n");
-// 			ft_putstr_fd("here?\n", data.stdio[1]);
-// printf("PATH  = %s\n", data.path);
 				if (execve(data.path, data.cmd_args, envp) == -1)
 					perror("execve error :");
 				free(data.path);
 				ft_split_free(data.cmd_args);
-				// free(buf);
 			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
-			// ft_putstr_fd("?\n", data.stdio[1]);
-			wait(0);
-			// printf("flag = %d\n", data.pipe_flag);
+			else
+				wait(0);
 			if (data.pipe_flag)
 			{
-				// close(fd[1]);
-				// printf("hello\n");
-				flag = 1;
 				data.pipe_flag--;
-				// old_fd[0] = fd[0];
-				// old_fd[1] = fd[1];
-				// close(fd[0]);
-				// close(fd[1]);
-				// dup2(fd[0], STDIN_FILENO);
-				// dup2(fd[1], fd[0]);
-				// dup2(fd[0], data.stdio[0]);
-				
-				// fd[1] = dup(fd[0]);
-				///////////////
-				// read(fd[0], output, BUFSIZE); // 표준 입력(-현재 fd[0])을 읽어
-				// printf("output = %s", output);
-			}
-			if (data.redirect_flag)
-			{
-				dup2(data.stdio[0], STDIN_FILENO);
-				dup2(data.stdio[1], STDOUT_FILENO);
+				if (data.cmds[data.idx + 1] != NULL)
+				{
+					dup2(fd[0], STDIN_FILENO);
+					close(fd[1]);
+					close(fd[0]);
+				}
 			}
 			free(data.cmds[data.idx]);
 			data.idx++;
 		}
+		dup2(temp[1], STDOUT_FILENO);
+		dup2(temp[0], STDIN_FILENO);
 		free(buf);
 		free(data.cmds);
 	}
