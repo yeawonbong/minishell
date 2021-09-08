@@ -10,6 +10,8 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <signal.h>
+# include <errno.h>
+# include <string.h>
 
 #define BUFSIZE 4000 //max_buf ? 
 
@@ -25,6 +27,7 @@ typedef	struct	s_data
 	int		stdio[2];
 	int		redirect_flag;
 	int		pipe_flag;
+	int		fd[2];
 }				t_data;
 
 typedef struct	s_utils
@@ -97,6 +100,8 @@ int		longer_len(char *str, char *str2);
 int     ft_strarr_height(char **env);
 char*	parse_redir(char *cmds);
 void	get_redirect(char *cmds, t_re *re);
+void	ft_cd(t_data *data);
+char	*get_cwd(void);
 
 /*
 **	redirect
@@ -104,7 +109,11 @@ void	get_redirect(char *cmds, t_re *re);
 void	redirect(t_data *data, int idx);
 char	*parse_redir(char *cmds);
 void	get_redirect(char *cmds, t_re *re);
-
+void	redir_1(char *file);
+void	redir_2(char *file);
+void	redir_3(char *file);
+void	redir_4(char *str);
+char	*ft_strjoin_free(char *dest, char *src);
 
 
 

@@ -68,17 +68,3 @@ char	*parse_redir(char *cmds)
 	free(r_u.subs);
 	return (r_u.ret);
 }
-
-// int main(void)
-// {
-//     char *str = "> < > cat > hi >> >> hi > dydy nlnl < > >>";
-//     char *s;
-
-//     s = parse_redir(str);
-//     printf("%s|\n", s);
-//     while (1)
-//     {
-
-//     }
-//     return (0);
-// }

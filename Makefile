@@ -3,23 +3,25 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
+#    By: ybong <ybong@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/04 16:52:30 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/09/08 20:16:35 by ybong            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = minishell.c\
 ms_modify_buf.c\
-ms_export.c\
 ms_fill_data.c\
 ms_run_cmd.c\
 ms_utils.c\
-ms_env.c\
+builtins/bi_env.c\
+builtins/bi_export.c\
+builtins/bi_cd.c\
 redirect/re_insert_space.c\
 redirect/re_get_re.c\
-redirect/redir.c
+redirect/redir.c\
+redirect/re_redirect.c
 
 CC = gcc
 CFLAGS = -fsanitize=address -Wall -Wextra -Werror 

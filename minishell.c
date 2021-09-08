@@ -1,15 +1,69 @@
 #include "minishell.h"
 
+int check_builtin(char *buf)
+{
+	if ((!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))\
+	|| (!(ft_strncmp(buf, "unset", 5)) && (!*(buf + 5) || *(buf + 5) == ' '))\
+	|| (ft_strncmp(buf, "env", longer_len("env", buf)) == 0)\
+	|| (!(ft_strncmp(buf, "cd", 2)) && (!*(buf + 2) || *(buf + 2) == ' '))\
+	|| (!(ft_strncmp(buf, "exit", 4)) && (!*(buf + 4) || *(buf + 4) == ' ')))
+		return(1);
+	printf("return 0\n");
+	return(0);
+}
+
+void	ft_builtins(t_data *data, char *buf)
+{
+	pid_t pid;
+
+	if (!(ft_strncmp(buf, "exit", 4)) && (!*(buf + 4) || *(buf + 4) == ' '))
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	if (data->pipe_flag)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			if (data->cmds[data->idx + 1] != NULL)
+			{
+				dup2(data->fd[1], STDOUT_FILENO);
+				close(data->fd[0]);
+				close(data->fd[1]);
+			}
+			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
+				ft_export(data, buf);
+			else if (!(ft_strncmp(buf, "unset", 5)) && (!*(buf + 5) || *(buf + 5) ==' ' ))
+				ft_unset(data, buf);
+			else if (ft_strncmp(buf, "env", longer_len("env", buf)) == 0)
+				ft_env(data);
+			else if (!(ft_strncmp(buf, "cd", 2)) && (!*(buf + 2) || *(buf + 2) == ' '))
+				ft_cd(data);
+
+		}
+		else
+			wait(0);
+	}
+}
+
+char	*get_cwd(void)
+{
+	char buf[BUFSIZE];
+	char *ptr;
+
+	getcwd(buf, BUFSIZE);
+	ptr = buf;
+	return (ptr);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 	char	*buf;
 	pid_t	pid = 0;
-	int		fd[2]; 
 	int		i;
 	int		temp[2];
-	// int		flag = 0;
-	char	output[BUFSIZE];
 
 	if (1 < argc || argv[1])
 		return (0);
@@ -20,15 +74,12 @@ int	main(int argc, char **argv, char **envp)
 	temp[1] = dup(STDOUT_FILENO);
 	while(1)
 	{
-		buf = readline("minishell $ "); //경로 넣어주기!! 해야함
-		printf("original buf = %s|\n", buf);
-	
+		printf("ybong_sma@%s", get_cwd());
+		buf = readline("$ "); //경로 넣어주기!! 해야함
 		if (*buf)
 			add_history(buf);
 		if (ft_strchr(buf, '$') && *buf)
 			buf = ft_modify_buf(&data, buf);
-		printf("modified buf = %s|\n", buf);
-
 		data.pipe_flag = 0;
 		i = 0;
 		while (buf[i])
@@ -38,39 +89,26 @@ int	main(int argc, char **argv, char **envp)
 			i++;
 		}
 		data.pipe_flag++;
-		printf("flag = %d\n", data.pipe_flag);
 		data.cmds = ft_split(buf, '|'); //cmd token -> |랑 ;단위로 쪼개야함.
 		i = 0;
 		data.idx = 0;
 		while (data.cmds[data.idx]) // ls | grep "minishell" | cat -> (ls, NULL) -> (grep, "minishell") -> (cat ,NULL)
 		{
-			pipe(fd); // fd[1] >-----------> fd[0]
+			pipe(data.fd); // fd[1] >-----------> fd[0]
 			data.redirect_flag = 0;
 			if (ft_strchr(data.cmds[data.idx], '<') || ft_strchr(data.cmds[data.idx], '>'))
 			 	data.redirect_flag = 1;
-			ft_memset(output, 0, BUFSIZE);
-			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
+			if (check_builtin(buf))
 			{
-				ft_export(&data, buf);
+				ft_builtins(&data, buf);
 				break;
 			}
-			else if (!(ft_strncmp(buf, "unset", 5)) && (!*(buf + 5) || *(buf + 5) == ' '))
-			{
-				ft_unset(&data, buf);
-				break;
-			}
-			else if ((ft_strncmp(buf, "env", longer_len("env", buf)) == 0))
-			{
-				ft_env(&data);
-				break;
-			}//
 			else
 			{
 				printf("fork!\n");
 				printf("current cmd = %s, idx = %d\n", data.cmds[data.idx], data.idx);
 				pid = fork();
 			}
-
 			if (pid == 0)
 			{
 				//안에 온다면, process 종료시키기
@@ -80,12 +118,12 @@ int	main(int argc, char **argv, char **envp)
 				{
 					if (data.cmds[data.idx + 1] != NULL)
 					{
-						dup2(fd[1], STDOUT_FILENO);
-						close(fd[0]);
-						close(fd[1]);
+						dup2(data.fd[1], STDOUT_FILENO);
+						close(data.fd[0]);
+						close(data.fd[1]);
 					}
 				}
-				// <
+				// <<
 				run_cmd(&data);
 				if (execve(data.path, data.cmd_args, envp) == -1)
 					perror("execve error :");
@@ -100,9 +138,9 @@ int	main(int argc, char **argv, char **envp)
 				data.pipe_flag--;
 				if (data.cmds[data.idx + 1] != NULL)
 				{
-					dup2(fd[0], STDIN_FILENO);
-					close(fd[1]);
-					close(fd[0]);
+					dup2(data.fd[0], STDIN_FILENO);
+					close(data.fd[1]);
+					close(data.fd[0]);
 				}
 			}
 			free(data.cmds[data.idx]);

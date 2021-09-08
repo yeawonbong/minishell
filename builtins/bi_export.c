@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	ft_export(t_data *data, char *buf)
 {
@@ -7,6 +7,7 @@ void	ft_export(t_data *data, char *buf)
 	int		add;
 	int		i;
 
+//data->cmds 
 	exp_arg = ft_split(buf, ' ');
 	add = 0;
 	i = 0;

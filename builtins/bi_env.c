@@ -1,6 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
 
-void    ft_env(t_data *data)
+void	ft_env(t_data *data)
 {
 	int i;
 

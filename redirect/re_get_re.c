@@ -1,19 +1,9 @@
 #include "../minishell.h"
 
-char 	*ft_strjoin_free(char *dest, char *src)
-{
-	char	*temp;
-
-	temp = dest;
-	dest = ft_strjoin(temp, src);
-	free(temp);
-	return (dest);
-}
-
 void	init_re(t_re *re, char **space)
 {
-	int	i;
-	int count;
+	int		i;
+	int		count;
 
 	i = 0;
 	count = 0;
@@ -48,7 +38,7 @@ void	get_type(t_re *re, char *space, int argc)
 {
 	if (space[0] == '>' && space[1] != '>')
 		re->re_type[argc] = 1;
-	else if(space[0] == '>' && space[1] == '>')
+	else if (space[0] == '>' && space[1] == '>')
 		re->re_type[argc] = 2;
 	else if (space[0] == '<' && space[1] != '<')
 		re->re_type[argc] = 3;
@@ -56,10 +46,24 @@ void	get_type(t_re *re, char *space, int argc)
 		re->re_type[argc] = 4;
 }
 
-void	get_redirect(char *cmds, t_re *re)//t_data *data
+void	redirect_error(char *str)
 {
-	char 	**space;
-	int	i;
+	if (str == NULL)
+	{
+		printf("syntax error near unexpected token '%s'\n", "newline");
+		exit(1);
+	}
+	else
+	{
+		printf("syntax error near unexpected token '%s'\n", str);
+		exit(1);
+	}
+}
+
+void	get_redirect(char *cmds, t_re *re)
+{
+	char	**space;
+	int		i;
 
 	i = 0;
 	space = ft_split(parse_redir(cmds), ' ');
@@ -69,10 +73,8 @@ void	get_redirect(char *cmds, t_re *re)//t_data *data
 		if (ft_strchr("<>", space[i][0]))
 		{
 			get_type(re, space[i], re->re_count);
-			if (ft_strchr("<>", space[i + 1][0]))
-			{
- 					//syntax error near unexpected token ' '
-			}
+			if (space[i + 1] == NULL || ft_strchr("<>", space[i + 1][0]))
+				redirect_error(space[i + 1]);
 			else
 				re->re_file[re->re_count++] = ft_strdup(space[++i]);
 		}
