@@ -33,7 +33,7 @@ void	ft_builtins(t_data *data, char *buf)
 				close(data->fd[1]);
 			}
 			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
-				ft_export(data, buf);
+				ft_export(data, buf); // not buf, cmd[i]!!! fix it!
 			else if (!(ft_strncmp(buf, "unset", 5)) && (!*(buf + 5) || *(buf + 5) ==' ' ))
 				ft_unset(data, buf);
 			else if (ft_strncmp(buf, "env", longer_len("env", buf)) == 0)
