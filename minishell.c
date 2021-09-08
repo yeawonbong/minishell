@@ -49,14 +49,12 @@ int	main(int argc, char **argv, char **envp)
 			if (ft_strchr(data.cmds[data.idx], '<') || ft_strchr(data.cmds[data.idx], '>'))
 			 	data.redirect_flag = 1;
 			ft_memset(output, 0, BUFSIZE);
-			if (data.redirect_flag)
-				parsing_cmd(&data, i); //redirect 처리
 			if (!(ft_strncmp(buf, "export", 6)) && (!*(buf + 6) || *(buf + 6) == ' '))
 			{
 				ft_export(&data, buf);
 				break;
 			}
-			if (!(ft_strncmp(buf, "unset", 5)) && (!*(buf + 5) || *(buf + 5) == ' '))
+			else if (!(ft_strncmp(buf, "unset", 5)) && (!*(buf + 5) || *(buf + 5) == ' '))
 			{
 				ft_unset(&data, buf);
 				break;
@@ -72,8 +70,12 @@ int	main(int argc, char **argv, char **envp)
 				printf("current cmd = %s, idx = %d\n", data.cmds[data.idx], data.idx);
 				pid = fork();
 			}
+
 			if (pid == 0)
 			{
+				//안에 온다면, process 종료시키기
+				if (data.redirect_flag)
+					redirect(&data, i); //redirect 처리
 				if (data.pipe_flag)
 				{
 					if (data.cmds[data.idx + 1] != NULL)
@@ -83,12 +85,13 @@ int	main(int argc, char **argv, char **envp)
 						close(fd[1]);
 					}
 				}
-				// < 
-				run_cmd(envp, &data);
+				// <
+				run_cmd(&data);
 				if (execve(data.path, data.cmd_args, envp) == -1)
 					perror("execve error :");
-				free(data.path);
-				ft_split_free(data.cmd_args);
+			
+				// free(data.path);
+				// ft_split_free(data.cmd_args);
 			}// pipe니까 다른 프로세스끼리 보낼 수 있다고.
 			else
 				wait(0);

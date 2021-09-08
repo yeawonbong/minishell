@@ -30,8 +30,13 @@ void	insert_space(t_utils *r_u, int flag, char *cmds)
 		r_u->join = ft_strjoin(r_u->subs, " >> ");
 		r_u->idx++;
 	}
-	else if (cmds[r_u->idx] == '<')
+	else if (cmds[r_u->idx] == '<' && cmds[r_u->idx + 1] != '<')
 		r_u->join = ft_strjoin(r_u->subs, " < ");
+	else if (cmds[r_u->idx] == '<' && cmds[r_u->idx + 1] == '<')
+	{
+		r_u->join = ft_strjoin(r_u->subs, " << ");
+		r_u->idx++;
+	}
 	ft_retjoin_free(r_u, r_u->join);
 	r_u->len = 0;
 }

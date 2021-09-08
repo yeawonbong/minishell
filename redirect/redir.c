@@ -34,6 +34,7 @@ void	redir_3(char *file)
 {
 	int fd;
 
+	printf("hello redir4\n");
 	fd = open(file, O_RDWR, 0644);
 	if (fd < 0)
 	{
@@ -43,6 +44,43 @@ void	redir_3(char *file)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
+}
+
+void	redir_4(char *str)
+{
+	int	re_fd[2];
+	pid_t	pid;
+	char	*buf;
+	int		fd;
+	// char temp[1024];÷
+
+	fd = dup(STDOUT_FILENO);
+	pipe(re_fd);
+	pid = fork();
+	if (pid == 0)
+	{
+		while (1)
+		{
+			buf = readline("> ");
+			if (ft_strlen(buf) == ft_strlen(str))
+			{
+				if (ft_strncmp(buf, str, ft_strlen(str)) == 0)
+				{	
+					free(buf);
+					exit(0);
+				}
+			}
+			dup2(re_fd[1], STDOUT_FILENO);
+			close(re_fd[0]);
+			printf("%s\n", buf);
+			free(buf);
+			dup2(fd, STDOUT_FILENO);
+		}
+	}
+	else
+		wait(0);
+	dup2(re_fd[0], STDIN_FILENO);
+	close(re_fd[1]);
 }
 
 int     redir_exec(t_re *re)
@@ -58,12 +96,14 @@ int     redir_exec(t_re *re)
 			redir_2(re->re_file[i]);
 		else if (re->re_type[i] == 3)
 			redir_3(re->re_file[i]);
+		else if (re->re_type[i] == 4)
+			redir_4(re->re_file[i]);
 		i++;
 	}
 	return (1);
 }
 
-void	parsing_cmd(t_data *data, int idx)
+void	redirect(t_data *data, int idx)
 {
 	t_re re;
 
@@ -73,17 +113,3 @@ void	parsing_cmd(t_data *data, int idx)
 	redir_exec(&re);
 
 }
-
-
-//1. red - cmd
-//2. red // cmd
-
-
-// int		main(int argc, char **argv, char **envp)
-// {
-// 	if (argc > 1 && argv[1])
-// 		return (0);
-// 	char *str = ft_strdup("cat -e >>s ms_get_re.c");
-// 	parsing_cmd(str, envp);
-// 	return (0);
-// }

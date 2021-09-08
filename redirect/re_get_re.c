@@ -46,12 +46,14 @@ char	*join_cmd(char *space, char *cmd_j)
 
 void	get_type(t_re *re, char *space, int argc)
 {
-	if (space[1] == '>')
-		re->re_type[argc] = 2;
-	else if(space[0] == '>')
+	if (space[0] == '>' && space[1] != '>')
 		re->re_type[argc] = 1;
-	else if (space[0] == '<')
+	else if(space[0] == '>' && space[1] == '>')
+		re->re_type[argc] = 2;
+	else if (space[0] == '<' && space[1] != '<')
 		re->re_type[argc] = 3;
+	else if (space[0] == '<' && space[1] == '<')
+		re->re_type[argc] = 4;
 }
 
 void	get_redirect(char *cmds, t_re *re)//t_data *data

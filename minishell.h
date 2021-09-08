@@ -9,6 +9,7 @@
 # include <readline/history.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <signal.h>
 
 #define BUFSIZE 4000 //max_buf ? 
 
@@ -80,7 +81,7 @@ void	ft_sort_env(t_data *data);
 /*
 **  ms_run_cmd.c
 */
-void			run_cmd(char **envp, t_data *data);
+void			run_cmd(t_data *data);
 
 /*
 **	ms_export.c
@@ -100,7 +101,7 @@ void	get_redirect(char *cmds, t_re *re);
 /*
 **	redirect
 */
-void	parsing_cmd(t_data *data, int idx);
+void	redirect(t_data *data, int idx);
 char	*parse_redir(char *cmds);
 void	get_redirect(char *cmds, t_re *re);
 
