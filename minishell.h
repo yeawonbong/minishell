@@ -30,6 +30,15 @@ typedef	struct	s_data
 	int		fd[2];
 }				t_data;
 
+typedef struct	s_mod
+{
+	char	*modified;
+	char	*var;
+	char*	newbuf;
+	int		i;
+	int		j;
+}				t_mod;
+
 typedef struct	s_utils
 {
 	char	*ret;
@@ -81,15 +90,13 @@ void	ft_env(t_data *data);
 void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
 
-/*
-**  ms_run_cmd.c
-*/
-void			run_cmd(t_data *data);
+
+void			get_cmd_path(t_data *data);
 
 /*
 **	ms_export.c
 */
-void	ft_export(t_data *data, char *buf);
+void	ft_export(t_data *data, int child);
 void	ft_unset(t_data *data, char *buf);
 
 /*
@@ -116,5 +123,9 @@ void	redir_4(char *str);
 char	*ft_strjoin_free(char *dest, char *src);
 
 
+
+
+int check_builtin(char *buf);
+void	ft_builtins(t_data *data);
 
 #endif

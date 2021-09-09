@@ -6,14 +6,14 @@
 #    By: ybong <ybong@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/08 20:16:35 by ybong            ###   ########.fr        #
+#    Updated: 2021/09/09 16:50:25 by ybong            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = minishell.c\
 ms_modify_buf.c\
 ms_fill_data.c\
-ms_run_cmd.c\
+ms_get_cmd_path.c\
 ms_utils.c\
 builtins/bi_env.c\
 builtins/bi_export.c\

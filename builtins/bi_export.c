@@ -1,13 +1,13 @@
 #include "../minishell.h"
 
-void	ft_export(t_data *data, char *buf)
+void	ft_export(t_data *data, int child)
 {
 	char	**exp_arg;
 	char	**tempenv;
 	int		add;
 	int		i;
 
-buf = 0;
+printf("======================\n");
 //data->cmds 
 	exp_arg = ft_split(data->cmds[data->idx], ' ');
 	add = 0;
@@ -19,10 +19,9 @@ buf = 0;
 			add++;
 		i++;
 	}
-	printf("export num : %d\n", i);
-
-	if (i == 1) // 그냥 export면 출력
+	if (i == 1 && child) // 그냥 export면 , 자식 프로세스에서 출력
 	{
+		printf("HERE\n");
 		i = 0;
 		while (data->env[i])
 			printf("%s\n", data->env[data->sort_env[i++]]);
