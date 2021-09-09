@@ -7,16 +7,20 @@ void	ft_export(t_data *data, char *buf)
 	int		add;
 	int		i;
 
+buf = 0;
 //data->cmds 
-	exp_arg = ft_split(buf, ' ');
+	exp_arg = ft_split(data->cmds[data->idx], ' ');
 	add = 0;
 	i = 0;
 	while (exp_arg[i])
 	{
+		printf("보자 : %s\n", exp_arg[i]);
 		if (ft_strchr(exp_arg[i], '='))
 			add++;
 		i++;
 	}
+	printf("export num : %d\n", i);
+
 	if (i == 1) // 그냥 export면 출력
 	{
 		i = 0;
@@ -31,6 +35,7 @@ void	ft_export(t_data *data, char *buf)
 		i = 1;
 		while (exp_arg[i])
 		{
+			printf("hihi\n");
 			if (*exp_arg[i] == '=')
 			{
 				printf("minishell: bad assignment\n");
@@ -55,6 +60,7 @@ void	ft_export(t_data *data, char *buf)
 
 void	ft_unset(t_data *data, char *buf)
 {
+	buf = 0;
 	char	**unset_arg;
 	char	**tempenv;
 	char	*var;
@@ -66,7 +72,7 @@ void	ft_unset(t_data *data, char *buf)
 	tempenv = NULL;
 	i = 0;
 	t = 0;
-	unset_arg = ft_split(buf, ' '); 
+	unset_arg = ft_split(data->cmds[data->idx], ' '); 
 	while (unset_arg[i]) // count vars to unset
 		i++;
 	if (i == 1)
