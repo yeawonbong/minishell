@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_get_cmd_path.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/09/09 16:52:37 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/10 17:47:31 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	split_free(char **array)
 	free(array);
 }
 
-char	**get_path(char **env)
+static	char	**get_path(char **env)
 {
 	char	*cmds;
 	char	**paths;
@@ -45,7 +45,7 @@ char	**get_path(char **env)
 	return (0);
 }
 
-char	*path_join(char **paths, char *cmds)
+static	char	*path_join(char **paths, char *cmds)
 {
 	char	*path;
 	char	*temp;

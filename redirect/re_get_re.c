@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   re_get_re.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/10 17:30:21 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/10 17:45:12 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void	init_re(t_re *re, char **space)
+static	void	init_re(t_re *re, char **space)
 {
 	int		i;
 	int		count;
@@ -22,7 +34,7 @@ void	init_re(t_re *re, char **space)
 	re->re_count = 0;
 }
 
-char	*join_cmd(char *space, char *cmd_j)
+static	char	*join_cmd(char *space, char *cmd_j)
 {
 	if (cmd_j == 0)
 		cmd_j = ft_strdup(space);
@@ -34,7 +46,7 @@ char	*join_cmd(char *space, char *cmd_j)
 	return (cmd_j);
 }
 
-void	get_type(t_re *re, char *space, int argc)
+static	void	get_type(t_re *re, char *space, int argc)
 {
 	if (space[0] == '>' && space[1] != '>')
 		re->re_type[argc] = 1;
@@ -46,7 +58,7 @@ void	get_type(t_re *re, char *space, int argc)
 		re->re_type[argc] = 4;
 }
 
-void	redirect_error(char *str)
+static	void	redirect_error(char *str)
 {
 	if (str == NULL)
 	{

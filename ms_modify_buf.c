@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ms_modify_buf.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/10 18:20:13 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-char	*ft_join_free_all(char *str1, char *str2)
+static	char	*ft_join_free_all(char *str1, char *str2)
 {
 	char	*temp;
 
@@ -33,11 +45,11 @@ char	*ft_replace_var(t_data *data, char *var)
 		return (ft_strdup(""));
 }
 
-void	ft_modify_process(t_data *data, t_mod *mod)
+static	void	ft_modify_process(t_data *data, t_mod *mod)
 {
 	if (*mod->newbuf == '$')
 	{
-		mod->var = ft_strdup(ft_itoa(getpid())); //getpid 뺴주기
+		mod->var = ft_strdup("$$");
 		mod->newbuf++;
 	}
 	else

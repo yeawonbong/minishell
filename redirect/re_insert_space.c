@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   re_insert_space.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/10 17:30:24 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/10 17:46:17 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void	r_utils_init(t_utils *r_u)
+static	void	r_utils_init(t_utils *r_u)
 {
 	r_u->subs = ft_strdup("");
 	r_u->join = ft_strdup("");
@@ -9,7 +21,7 @@ void	r_utils_init(t_utils *r_u)
 	r_u->idx = 0;
 }
 
-void	ft_retjoin_free(t_utils *r_u, char *str)
+static	void	ft_retjoin_free(t_utils *r_u, char *str)
 {
 	char	*temp;
 
@@ -18,7 +30,7 @@ void	ft_retjoin_free(t_utils *r_u, char *str)
 	free(temp);
 }
 
-void	insert_space(t_utils *r_u, int flag, char *cmds)
+static	void	insert_space(t_utils *r_u, int flag, char *cmds)
 {
 	free(r_u->subs);
 	r_u->subs = ft_substr(cmds, r_u->idx - r_u->len + flag, r_u->len - flag);

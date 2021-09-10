@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redir.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/10 17:44:46 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*ft_strjoin_free(char *dest, char *src)
@@ -10,7 +22,7 @@ char	*ft_strjoin_free(char *dest, char *src)
 	return (dest);
 }
 
-int	redir_exec(t_re *re)
+static	int	redir_exec(t_re *re)
 {
 	int		i;
 

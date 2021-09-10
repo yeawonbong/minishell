@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ybong <ybong@student.42.fr>                +#+  +:+       +#+         #
+#    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/09 16:50:25 by ybong            ###   ########.fr        #
+#    Updated: 2021/09/10 18:06:30 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ ms_get_cmd_path.c\
 ms_utils.c\
 builtins/bi_env.c\
 builtins/bi_export.c\
-builtins/bi_cd.c\
+builtins/bi_dir.c\
+builtins/builtins.c\
 redirect/re_insert_space.c\
 redirect/re_get_re.c\
 redirect/redir.c\

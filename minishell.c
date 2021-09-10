@@ -1,24 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/10 18:25:04 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-char	*get_cwd(void)
-{
-	char	buf[BUFSIZE];
-	char	*ptr;
-
-	getcwd(buf, BUFSIZE);
-	ptr = buf;
-	return (ptr);
-}
-
-char	*init_data(t_data *data)
+static	char	*init_data(t_data *data)
 {
 	char	*buf;
 
-	printf("ybong_sma@%s", get_cwd());
+	printf("ybong_sma@%s", ft_pwd());
 	buf = readline("$ ");
 	if (*buf)
 		add_history(buf);
-	if (ft_strchr(buf, '$') && *buf)
+	if (ft_strchr(buf, '$') && *buf) //+ "" ''
 		buf = ft_modify_buf(data, buf);
 	data->cmds = ft_split(buf, '|');
 	data->idx = 0;
@@ -26,7 +28,7 @@ char	*init_data(t_data *data)
 	return (buf);
 }
 
-void	exec_in_child(t_data *data)
+static	void	exec_in_child(t_data *data)
 {
 	pid_t	pid;
 
@@ -48,7 +50,7 @@ void	exec_in_child(t_data *data)
 		wait(0);
 }
 
-void	exec_cmd(t_data *data)
+static	void	exec_cmd(t_data *data)
 {
 	while (data->cmds[data->idx])
 	{

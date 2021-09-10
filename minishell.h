@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/10 18:41:58 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -13,33 +25,33 @@
 # include <errno.h>
 # include <string.h>
 
-#define BUFSIZE 4000 //max_buf ? 
+# define BUFSIZE 2048
 
-typedef	struct	s_data
+typedef struct s_data
 {
-	char	**cmds; //cmd 토큰 cat aa | grep a
-	char	**cmd_args; // 토큰 cat . aa
+	char	**cmds;
+	char	**cmd_args;
+	int		idx;
 	char	**env;
 	int		env_height;
 	int		*sort_env;
 	char	*path;
-	int		idx; //cmd의 idx
-	int		stdio[2];
 	int		redirect_flag;
 	int		pipe_flag;
+	int		stdio[2];
 	int		fd[2];
 }				t_data;
 
-typedef struct	s_mod
+typedef struct s_mod
 {
 	char	*modified;
 	char	*var;
-	char*	newbuf;
+	char	*newbuf;
 	int		i;
 	int		j;
 }				t_mod;
 
-typedef struct	s_utils
+typedef struct s_utils
 {
 	char	*ret;
 	char	*subs;
@@ -48,7 +60,7 @@ typedef struct	s_utils
 	int		idx;
 }				t_utils;
 
-typedef struct	s_re
+typedef struct s_re
 {
 	char	**re_file;
 	char	*cmd_j;
@@ -57,75 +69,67 @@ typedef struct	s_re
 	int		re_count;
 }				t_re;
 
-// typedef struct s_fd
-// {
-// 	int	stdin_origin;
-// 	int	stdout_origin;
-// }
-
-
-
+typedef struct s_unset
+{
+	char	**unset_arg;
+	char	**tempenv;
+	char	*var;
+	int		i;
+	int		j;
+	int		k;
+	int		t;
+}				t_unset;
 /*
 ** minishell.c
 */
-
+void	get_cmd_path(t_data *data);
 
 /*
 ** ms_fill_data.c
 */
 void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
-void	ft_filldata(t_data *data, char **envp); //이름수정할래
+void	ft_filldata(t_data *data, char **envp);
 
 /*
 **  ms_modify_buf.c
 */
-char	*ft_replace_var(t_data *data, char *var);
 char	*ft_modify_buf(t_data *data, char *buf);
 
 /*
-**	ms_env.c
+**	builtins
 */
+int		check_builtin(char *buf);
+void	ft_builtins(t_data *data);
+void	ft_export(t_data *data, int child);
+void	ft_unset(t_data *data);
+void	ft_cd(t_data *data);
 void	ft_env(t_data *data);
 void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
+char	*ft_pwd(void);
+void	ft_echo(char *cmd);
 
-
-void			get_cmd_path(t_data *data);
-
-/*
-**	ms_export.c
-*/
-void	ft_export(t_data *data, int child);
-void	ft_unset(t_data *data, char *buf);
 
 /*
 **	ms_utils.c
 */
 void	ft_split_free(char **strarr);
 int		longer_len(char *str, char *str2);
-int     ft_strarr_height(char **env);
-char*	parse_redir(char *cmds);
+int		ft_strarr_height(char **env);
+char	*parse_redir(char *cmds);
 void	get_redirect(char *cmds, t_re *re);
-void	ft_cd(t_data *data);
-char	*get_cwd(void);
 
 /*
 **	redirect
 */
+char	*ft_strjoin_free(char *dest, char *src);
 void	redirect(t_data *data, int idx);
-char	*parse_redir(char *cmds);
 void	get_redirect(char *cmds, t_re *re);
+char	*parse_redir(char *cmds);
 void	redir_1(char *file);
 void	redir_2(char *file);
 void	redir_3(char *file);
 void	redir_4(char *str);
-char	*ft_strjoin_free(char *dest, char *src);
-
-
-
-
-int check_builtin(char *buf);
-void	ft_builtins(t_data *data);
 
 #endif
