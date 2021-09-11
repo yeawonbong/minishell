@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 17:52:58 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 18:19:28 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int	main(int argc, char **argv, char **envp)
 		dup2(data.stdio[1], STDOUT_FILENO);
 		free(buf);
 		ft_split_free(data.cmds);
+		// signal(SIGINT, SIG_IGN);
 	}
 	return (0);
 }

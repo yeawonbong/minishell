@@ -6,21 +6,22 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 16:05:08 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 18:10:32 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redir_1(char *file)
+int	redir_1(char *file)
 {
 	int		fd;
 	// pid_t	pid;
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
-		printf("error : %s %d\n", strerror(errno), errno);
-		exit(1);
+		printf("error : %s\n", strerror(errno));
+		g_status = 1;
+		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
 	// pid = fork();
@@ -34,34 +35,38 @@ void	redir_1(char *file)
 	// 	wait(&g_stataus);
 	// }
 	close(fd);
+	return (0);
 }
 
-void	redir_2(char *file)
+int	redir_2(char *file)
 {
 	int		fd;
 	fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
-printf("현재파일은: %s\n", file);
 	if (fd < 0)
 	{
-		printf("error : %s %d\n", strerror(errno), errno);
-		exit(1);
+		printf("error : %s\n", strerror(errno));
+		g_status = 1;
+		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
+	return (0);
 }
 
-void	redir_3(char *file)
+int	redir_3(char *file)
 {
 	int		fd;
 
 	fd = open(file, O_RDWR, 0644);
 	if (fd < 0)
 	{
-		printf("error : %s %d\n", strerror(errno), errno);
-		exit(1);
+		printf("error : %s\n", strerror(errno));
+		g_status = 1;
+		return (-1);
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
+	return (0);
 }
 
 void	get_buf(int re_fd[2], char *buf, int fd, char *str)

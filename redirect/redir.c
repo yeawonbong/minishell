@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 17:00:18 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 18:07:35 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,22 @@ static	int	redir_exec(t_re *re)
 {
 	int		i;
 	pid_t	pid;
+	int		error;
 
 	i = 0;
 	pid = 0;
 	while (i < re->re_argc)
 	{
 		if (re->re_type[i] == 1)
-			redir_1(re->re_file[i]);
+			error = redir_1(re->re_file[i]);
 		else if (re->re_type[i] == 2)
-			redir_2(re->re_file[i]);
+			error = redir_2(re->re_file[i]);
 		else if (re->re_type[i] == 3)
-			redir_3(re->re_file[i]);
+			error = redir_3(re->re_file[i]);
 		else if (re->re_type[i] == 4)
 			redir_4(re->re_file[i]);
+		if (error == -1)
+			return (-1);
 		i++;
 	}
 	return (1);
@@ -51,7 +54,8 @@ int	redirect(t_data *data, int idx)
 	get_redirect(data->cmds[idx], &re);
 	free(data->cmds[idx]);
 	data->cmds[idx] = re.cmd_j;
-	redir_exec(&re);
+	if (redir_exec(&re) == -1)
+		return (-1);
 	if (check_builtin(data->cmds[data->idx]))
 		ft_builtins(data);
 	else

@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 17:45:28 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 18:06:45 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,12 +128,12 @@ void	get_redirect(char *cmds, t_re *re);
 **	redirect
 */
 char	*ft_strjoin_free(char *dest, char *src);
-int	redirect(t_data *data, int idx);
+int		redirect(t_data *data, int idx);
 void	get_redirect(char *cmds, t_re *re);
 char	*parse_redir(char *cmds);
-void	redir_1(char *file);
-void	redir_2(char *file);
-void	redir_3(char *file);
+int		redir_1(char *file);
+int		redir_2(char *file);
+int		redir_3(char *file);
 void	redir_4(char *str);
 
 #endif
