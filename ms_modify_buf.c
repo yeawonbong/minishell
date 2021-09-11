@@ -6,13 +6,13 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 18:20:13 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 17:45:17 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	char	*ft_join_free_all(char *str1, char *str2)
+char	*ft_join_free_all(char *str1, char *str2)
 {
 	char	*temp;
 
@@ -50,6 +50,11 @@ static	void	ft_modify_process(t_data *data, t_mod *mod)
 	if (*mod->newbuf == '$')
 	{
 		mod->var = ft_strdup("$$");
+		mod->newbuf++;
+	}
+	else if (*mod->newbuf == '?')
+	{
+		mod->var = ft_itoa(WEXITSTATUS(g_status));
 		mod->newbuf++;
 	}
 	else

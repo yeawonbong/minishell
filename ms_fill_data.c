@@ -6,17 +6,28 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:29:08 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 17:47:30 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 16:58:45 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	if_pipe_dup2(t_data *data, int fd1, int fd2, int toclose)
+{
+	if (data->cmds[data->idx + 1] != NULL)
+	{
+		dup2(fd1, fd2);
+		close(toclose);
+	}
+	
+}
 
 void	ft_filldata(t_data *data, char **envp)
 {
 	int		i;
 
 	i = 0;
+	g_status = 1;
 	data->idx = 0;
 	data->path = 0;
 	data->env_height = ft_strarr_height(envp);

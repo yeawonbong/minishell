@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bi_export.c                                        :+:      :+:    :+:   */
+/*   bi_in_parent.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 17:51:44 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 11:36:19 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,4 +116,30 @@ void	ft_unset(t_data *data)
 		ft_unset_process(data, &u);
 	}
 	ft_split_free(u.unset_arg);
+}
+
+void	ft_cd(t_data *data)
+{
+	char	**cd_args;
+	int		i;
+	char	*path;
+
+	i = 0;
+	cd_args = ft_split(data->cmds[data->idx], ' ');
+	if (cd_args[1] == NULL)
+	{
+		while (data->env[i])
+		{
+			if (ft_strncmp(data->env[i], "HOME=", 5) == 0)
+			{
+				path = data->env[i] + 5;
+				break ;
+			}
+			i++;
+		}
+		chdir(path);
+		return ;
+	}
+	chdir(cd_args[1]);
+	ft_split_free(cd_args);
 }

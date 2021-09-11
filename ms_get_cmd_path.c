@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/09/10 17:47:31 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 12:03:58 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ static	char	*path_join(char **paths, char *cmds)
 		close(fd);
 		i++;
 	}
-	ft_putstr_fd("command not found :", 1);
-	printf("%s\n", cmds);
-	exit(1);
+	exit(127);
 	return (0);
 }
 

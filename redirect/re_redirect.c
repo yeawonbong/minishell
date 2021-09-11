@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 17:30:27 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 16:05:08 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	redir_1(char *file)
 {
 	int		fd;
-
+	// pid_t	pid;
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -23,14 +23,24 @@ void	redir_1(char *file)
 		exit(1);
 	}
 	dup2(fd, STDOUT_FILENO);
+	// pid = fork();
+	// if (pid == 0)
+	// {
+	// 	get_cmd_path(data);
+	// 	execve(data->path, data->cmd_args, data->env);
+	// }
+	// else
+	// {
+	// 	wait(&g_stataus);
+	// }
 	close(fd);
 }
 
 void	redir_2(char *file)
 {
 	int		fd;
-
 	fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
+printf("현재파일은: %s\n", file);
 	if (fd < 0)
 	{
 		printf("error : %s %d\n", strerror(errno), errno);
@@ -89,7 +99,7 @@ void	redir_4(char *str)
 	if (pid == 0)
 		get_buf(re_fd, buf, fd, str);
 	else
-		wait(0);
+		wait(&g_status);
 	dup2(re_fd[0], STDIN_FILENO);
 	close(re_fd[1]);
 }

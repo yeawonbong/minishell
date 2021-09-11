@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:58:14 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 18:40:14 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 12:44:14 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static	void	ft_builtins_in_child(t_data *data, char *cmd)
 	else if (!(ft_strncmp(cmd, "echo", 4)) \
 			&& (!*(cmd + 4) || *(cmd + 4) == ' '))
 		ft_echo(cmd);
-	exit(1);
+	exit(0);
 }
 
 static	int	ft_builtins_in_parents(t_data *data, char *cmd)
@@ -53,21 +53,20 @@ static	int	ft_builtins_in_parents(t_data *data, char *cmd)
 	if (!(ft_strncmp(cmd, "export", 6)) && (*(cmd + 6) || *(cmd + 6) == ' '))
 	{
 		ft_export(data, 0);
-		free(cmd);
-		return (1);
+		return (0);
 	}
 	else if (!(ft_strncmp(cmd, "unset", 5)) && \
 					(!*(cmd + 5) || *(cmd + 5) == ' ' ))
 	{
 		ft_unset(data);
-		return (1);
+		return (0);
 	}
 	else if (!(ft_strncmp(cmd, "cd", 2)) && (!*(cmd + 2) || *(cmd + 2) == ' '))
 	{
 		ft_cd(data);
-		return (1);
+		return (0);
 	}
-	return (0);
+	return (-1);
 }
 
 void	ft_builtins(t_data *data)
@@ -77,18 +76,23 @@ void	ft_builtins(t_data *data)
 	char	*cmd;
 
 	i = data->idx;
+	// redirect(data, data->idx);
 	cmd = ft_strtrim(data->cmds[i], " ");
 	if (!(ft_strncmp(cmd, "exit", 4)) && (!*(cmd + 4) || *(cmd + 4) == ' '))
 	{
 		printf("exit\n");
 		exit(0);
 	}
-	if (ft_builtins_in_parents(data, cmd))
+	if (!ft_builtins_in_parents(data, cmd))
+	{
+		g_status = 0;
+		free(cmd);
 		return ;
+	}
 	pid = fork();
 	if (pid == 0)
 		ft_builtins_in_child(data, cmd);
 	else
-		wait(0);
+		wait(&g_status);
 	free(cmd);
 }

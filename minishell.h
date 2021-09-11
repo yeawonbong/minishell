@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 18:41:58 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/11 17:45:28 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <string.h>
 
 # define BUFSIZE 2048
+
+int			g_status;
 
 typedef struct s_data
 {
@@ -83,6 +85,7 @@ typedef struct s_unset
 ** minishell.c
 */
 void	get_cmd_path(t_data *data);
+int		exec_in_child(t_data *data);
 
 /*
 ** ms_fill_data.c
@@ -90,11 +93,13 @@ void	get_cmd_path(t_data *data);
 void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
 void	ft_filldata(t_data *data, char **envp);
+void	if_pipe_dup2(t_data *data, int fd1, int fd2, int toclose);
 
 /*
 **  ms_modify_buf.c
 */
 char	*ft_modify_buf(t_data *data, char *buf);
+char	*ft_join_free_all(char *str1, char *str2);
 
 /*
 **	builtins
@@ -110,7 +115,6 @@ void	ft_sort_env(t_data *data);
 char	*ft_pwd(void);
 void	ft_echo(char *cmd);
 
-
 /*
 **	ms_utils.c
 */
@@ -124,7 +128,7 @@ void	get_redirect(char *cmds, t_re *re);
 **	redirect
 */
 char	*ft_strjoin_free(char *dest, char *src);
-void	redirect(t_data *data, int idx);
+int	redirect(t_data *data, int idx);
 void	get_redirect(char *cmds, t_re *re);
 char	*parse_redir(char *cmds);
 void	redir_1(char *file);
