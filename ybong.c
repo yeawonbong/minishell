@@ -4,15 +4,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(){
-    char    *buf;
+void sigint_handler(int signo)
+{
+	printf("Ctrl_C\n");
+}
 
-    while(1)
-    {
-        buf = readline("ybong$ ") ;
-	    if (*buf)
-		    add_history(buf);
-        free(buf);
-		signal(SIGINT, SIG_IGN);
-    }
+int main(){
+	char    *buf;
+
+
+	while(1)
+	{
+		// buf = readline("ybong$ ") ;
+		// if (*buf)
+		// 	add_history(buf);
+		// free(buf);
+		// while(1){
+		signal(SIGINT, sigint_handler);
+		// }
+	}
 }

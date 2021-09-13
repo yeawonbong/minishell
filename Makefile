@@ -6,7 +6,7 @@
 #    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/11 11:36:47 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/09/13 12:51:52 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ redirect/redir.c\
 redirect/re_redirect.c
 
 CC = gcc
-CFLAGS = -fsanitize=address -Wall -Wextra -Werror 
+CFLAGS = -fsanitize=address  -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 AR = ar rcs
 NAME = minishell.a
 OBJS = *.o  #$(SRCS:.c=.o)
@@ -41,7 +41,7 @@ $(NAME) : $(OBJS)
 	@make all -C $(LIB_DIR)
 	@cp $(LIB_DIR)/$(LIB) $(NAME)
 	$(AR) $@ $(OBJS)
-	$(CC) $(CFLAGS) $@ -o $(OUT) -lreadline
+	$(CC) $(CFLAGS) $@ -o $(OUT) -lreadline -L /usr/local/opt/readline/lib/libreadline.a -I /usr/local/opt/readline/include
 
 $(OBJS) : $(SRCS)
 	$(CC) $(CFLAGS) -c $(SRCS)

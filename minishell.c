@@ -6,11 +6,20 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 18:19:28 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/13 13:21:28 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void sigint_handler(char *buf)
+{
+	printf("\n");
+	g_status = 130;
+	rl_on_new_line();
+	rl_replace_line("", 1);
+	rl_redisplay();
+}
 
 int	ft_error(t_data *data)
 {
@@ -33,13 +42,18 @@ static	char	*init_data(t_data *data)
 	char	*buf;
 	char	*prompt;
 
-
 	prompt = ft_strjoin_free(ft_pwd(), "$ ");
 	prompt = ft_join_free_all(ft_strdup("ybong_sma@"), prompt);	
-	buf = readline(prompt) ;
+	buf = readline(prompt);
+	if (buf == 0)
+	{
+		printf("exit\n");
+		exit(0);
+	}
 	if (*buf)
 		add_history(buf);
 	free(prompt);
+	
 	if (ft_strchr(buf, '$') && *buf) //+ "" ''
 		buf = ft_modify_buf(data, buf);
 	data->cmds = ft_split(buf, '|');
@@ -105,13 +119,14 @@ int	main(int argc, char **argv, char **envp)
 	ft_filldata(&data, envp);
 	while (1)
 	{
+		// signal()
+		signal(SIGINT, sigint_handler);
 		buf = init_data(&data);
 		exec_cmd(&data);
 		dup2(data.stdio[0], STDIN_FILENO);
 		dup2(data.stdio[1], STDOUT_FILENO);
 		free(buf);
 		ft_split_free(data.cmds);
-		// signal(SIGINT, SIG_IGN);
 	}
 	return (0);
 }
