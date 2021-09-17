@@ -6,27 +6,18 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/13 13:21:28 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/17 18:27:51 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void sigint_handler(char *buf)
-{
-	printf("\n");
-	g_status = 130;
-	rl_on_new_line();
-	rl_replace_line("", 1);
-	rl_redisplay();
-}
 
 int	ft_error(t_data *data)
 {
 	char	**cmd_args;
 
 	cmd_args = ft_split(data->cmds[data->idx], ' ');
-	if (WEXITSTATUS(g_status) == 127)
+	if (g_status == 127)
 	{
 		dup2(data->stdio[1], STDOUT_FILENO);
 		dup2(data->stdio[0], STDIN_FILENO);
@@ -53,7 +44,6 @@ static	char	*init_data(t_data *data)
 	if (*buf)
 		add_history(buf);
 	free(prompt);
-	
 	if (ft_strchr(buf, '$') && *buf) //+ "" ''
 		buf = ft_modify_buf(data, buf);
 	data->cmds = ft_split(buf, '|');
@@ -65,17 +55,24 @@ static	char	*init_data(t_data *data)
 int	exec_in_child(t_data *data)
 {
 	pid_t	pid;
-
+	int		sig_num;
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
 		if_pipe_dup2(data, data->fd[1], STDOUT_FILENO, data->fd[0]);
 		get_cmd_path(data);
 		if (execve(data->path, data->cmd_args, data->env) == -1)
 			printf("minishell : %s\n", strerror(errno));
 	}
 	else
-		wait(&g_status);
+	{
+		signal(SIGINT, child_handler);
+		wait(&sig_num);
+		if (WIFSIGNALED(sig_num) && WTERMSIG(sig_num) == 2)
+			return (-1);
+	}
+	g_status = WEXITSTATUS(g_status);
 	return (ft_error(data));
 }
 
@@ -117,10 +114,9 @@ int	main(int argc, char **argv, char **envp)
 		return (0);
 	buf = NULL;
 	ft_filldata(&data, envp);
+	signal(SIGINT, &sigint_handler);
 	while (1)
 	{
-		// signal()
-		signal(SIGINT, sigint_handler);
 		buf = init_data(&data);
 		exec_cmd(&data);
 		dup2(data.stdio[0], STDIN_FILENO);

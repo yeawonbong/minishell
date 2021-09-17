@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 18:07:35 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/17 18:25:13 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,30 @@ static	int	redir_exec(t_re *re)
 		else if (re->re_type[i] == 3)
 			error = redir_3(re->re_file[i]);
 		else if (re->re_type[i] == 4)
-			redir_4(re->re_file[i]);
+			error = redir_4(re->re_file[i]);
 		if (error == -1)
 			return (-1);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 int	redirect(t_data *data, int idx)
 {
 	t_re	re;
 
-	get_redirect(data->cmds[idx], &re);
+	if (get_redirect(data->cmds[idx], &re) == -1)
+	{
+		g_status = 258;
+		return (-1);
+	}
 	free(data->cmds[idx]);
 	data->cmds[idx] = re.cmd_j;
 	if (redir_exec(&re) == -1)
 		return (-1);
 	if (check_builtin(data->cmds[data->idx]))
 		ft_builtins(data);
-	else
+	else //if (re.re_type[re.re_count] != 4)
 	{
 		if (exec_in_child(data) == -1)
 			return (-1) ;

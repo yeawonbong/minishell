@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 18:10:32 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/17 18:42:23 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,6 @@ int	redir_1(char *file)
 		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
-	// pid = fork();
-	// if (pid == 0)
-	// {
-	// 	get_cmd_path(data);
-	// 	execve(data->path, data->cmd_args, data->env);
-	// }
-	// else
-	// {
-	// 	wait(&g_stataus);
-	// }
 	close(fd);
 	return (0);
 }
@@ -74,11 +64,16 @@ void	get_buf(int re_fd[2], char *buf, int fd, char *str)
 	while (1)
 	{
 		buf = readline("> ");
+		if (buf == 0)
+		{
+			exit(0);
+		}
 		if (ft_strlen(buf) == ft_strlen(str))
 		{
 			if (ft_strncmp(buf, str, ft_strlen(str)) == 0)
 			{	
 				free(buf);
+				close(re_fd[1]);
 				exit(0);
 			}
 		}
@@ -90,21 +85,33 @@ void	get_buf(int re_fd[2], char *buf, int fd, char *str)
 	}
 }
 
-void	redir_4(char *str)
+int	redir_4(char *str)
 {
 	int		re_fd[2];
 	pid_t	pid;
 	char	*buf;
 	int		fd;
+	int		sig_num;
 
 	buf = NULL;
 	fd = dup(STDOUT_FILENO);
 	pipe(re_fd);
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
 		get_buf(re_fd, buf, fd, str);
+	}
 	else
-		wait(&g_status);
+	{
+		signal(SIGINT, redirect_handler);
+		wait(&sig_num);
+		if (WIFSIGNALED(sig_num) && WTERMSIG(sig_num) == 2)
+			return (-1);
+		g_status = WEXITSTATUS(sig_num);
+	}
 	dup2(re_fd[0], STDIN_FILENO);
 	close(re_fd[1]);
+	close(re_fd[0]);
+	return (0);
 }

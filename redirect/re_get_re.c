@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:21 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 17:45:12 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/17 13:54:04 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,14 @@ static	void	redirect_error(char *str)
 	if (str == NULL)
 	{
 		printf("syntax error near unexpected token '%s'\n", "newline");
-		exit(1);
 	}
 	else
 	{
 		printf("syntax error near unexpected token '%s'\n", str);
-		exit(1);
 	}
 }
 
-void	get_redirect(char *cmds, t_re *re)
+int	get_redirect(char *cmds, t_re *re)
 {
 	char	**space;
 	int		i;
@@ -86,7 +84,10 @@ void	get_redirect(char *cmds, t_re *re)
 		{
 			get_type(re, space[i], re->re_count);
 			if (space[i + 1] == NULL || ft_strchr("<>", space[i + 1][0]))
+			{
 				redirect_error(space[i + 1]);
+				return (-1);
+			}
 			else
 				re->re_file[re->re_count++] = ft_strdup(space[++i]);
 		}
@@ -94,4 +95,5 @@ void	get_redirect(char *cmds, t_re *re)
 			re->cmd_j = join_cmd(space[i], re->cmd_j);
 		i++;
 	}
+	return (0);
 }

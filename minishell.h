@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/13 12:35:41 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/17 13:54:12 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,18 +122,27 @@ void	ft_split_free(char **strarr);
 int		longer_len(char *str, char *str2);
 int		ft_strarr_height(char **env);
 char	*parse_redir(char *cmds);
-void	get_redirect(char *cmds, t_re *re);
 
 /*
 **	redirect
 */
 char	*ft_strjoin_free(char *dest, char *src);
 int		redirect(t_data *data, int idx);
-void	get_redirect(char *cmds, t_re *re);
+int		get_redirect(char *cmds, t_re *re);
 char	*parse_redir(char *cmds);
 int		redir_1(char *file);
 int		redir_2(char *file);
 int		redir_3(char *file);
-void	redir_4(char *str);
+int		redir_4(char *str);
+
+
+/*
+**	signal
+*/
+void sigint_handler(int signo);
+void child_handler(int signo);
+void redirect_handler(int signo);
+
+
 
 #endif

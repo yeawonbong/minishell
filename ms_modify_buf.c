@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 17:45:17 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/17 18:27:59 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static	void	ft_modify_process(t_data *data, t_mod *mod)
 	}
 	else if (*mod->newbuf == '?')
 	{
-		mod->var = ft_itoa(WEXITSTATUS(g_status));
+		mod->var = ft_itoa(g_status);
 		mod->newbuf++;
 	}
 	else
