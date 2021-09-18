@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:40:36 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/10 17:40:38 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/18 13:24:55 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,14 @@ int	ft_strarr_height(char **env)
 	while (env[i])
 		i++;
 	return (i);
+}
+
+char	*ft_join_free_all(char *str1, char *str2)
+{
+	char	*temp;
+
+	temp = ft_strjoin(str1, str2);
+	free(str1);
+	free(str2);
+	return (temp);
 }

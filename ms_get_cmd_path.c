@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_get_cmd_path.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/09/11 12:03:58 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/18 12:32:13 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static	char	*path_join(char **paths, char *cmds)
 		fd = open(path, O_RDONLY);
 		if (fd > 0)
 		{
+			close(fd);
 			free(temp);
 			return (path);
 		}
@@ -78,6 +79,12 @@ void	get_cmd_path(t_data *data)
 
 	paths = get_path(data->env);
 	data->cmd_args = ft_split(data->cmds[data->idx], ' ');
+	if (data->cmd_args[0][0] == '.' || data->cmd_args[0][0] == '/')
+	{
+		split_free(paths);
+		data->path = data->cmd_args[0];
+		return ;
+	}
 	data->path = path_join(paths, data->cmd_args[0]);
 	if (data->path != 0)
 	{

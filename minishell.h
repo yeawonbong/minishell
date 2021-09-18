@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 13:54:12 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/18 15:58:26 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,26 @@ typedef struct s_data
 	int		fd[2];
 }				t_data;
 
-typedef struct s_mod
+typedef struct s_var
 {
 	char	*modified;
 	char	*var;
 	char	*newbuf;
 	int		i;
-	int		j;
-}				t_mod;
+}				t_var;
+
+typedef struct s_qte
+{
+	char	*modified;
+	char	*inqte;
+	char	*newbuf;
+	int 	i;
+	int		qidx; //open
+	// int		q2; //close
+	// int		qteidx;
+	// int		pairidx;
+}				t_qte;
+
 
 typedef struct s_utils
 {
@@ -96,10 +108,13 @@ void	ft_filldata(t_data *data, char **envp);
 void	if_pipe_dup2(t_data *data, int fd1, int fd2, int toclose);
 
 /*
-**  ms_modify_buf.c
+**  ms_modify_buf (quote, envar)
 */
 char	*ft_modify_buf(t_data *data, char *buf);
-char	*ft_join_free_all(char *str1, char *str2);
+char	*ft_replace_var(t_data *data, char *var);
+void	ft_envar_process(t_data *data, t_var *var);
+char	*ft_modify_envar(t_data *data, t_var *var, char *buf);
+
 
 /*
 **	builtins
@@ -122,6 +137,7 @@ void	ft_split_free(char **strarr);
 int		longer_len(char *str, char *str2);
 int		ft_strarr_height(char **env);
 char	*parse_redir(char *cmds);
+char	*ft_join_free_all(char *str1, char *str2);
 
 /*
 **	redirect
@@ -142,7 +158,6 @@ int		redir_4(char *str);
 void sigint_handler(int signo);
 void child_handler(int signo);
 void redirect_handler(int signo);
-
 
 
 #endif

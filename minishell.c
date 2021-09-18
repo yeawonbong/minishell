@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 18:27:51 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/18 16:44:59 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static	char	*init_data(t_data *data)
 	if (*buf)
 		add_history(buf);
 	free(prompt);
-	if (ft_strchr(buf, '$') && *buf) //+ "" ''
+	if (ft_strchr(buf, '$') || ft_strchr(buf, '\'') || ft_strchr(buf, '"'))
 		buf = ft_modify_buf(data, buf);
 	data->cmds = ft_split(buf, '|');
 	data->idx = 0;

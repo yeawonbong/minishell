@@ -3,98 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   ms_modify_buf.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 18:27:59 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/18 17:33:19 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_join_free_all(char *str1, char *str2)
+// static void	ft_quote_process(t_data *data, t_qte *qte, char *buf)
+// {
+// 	int	i;
+// 	while (*qte->newbuf)
+// 	{
+		
+// 	}
+
+// }
+
+
+static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
 {
-	char	*temp;
-
-	temp = ft_strjoin(str1, str2);
-	free(str1);
-	free(str2);
-	return (temp);
-}
-
-char	*ft_replace_var(t_data *data, char *var)
-{
-	int		i;
-	int		j;
-
+	t_var	var;
+	int	i;
+	
 	i = 0;
-	j = 0;
-	while (data->env[i])
-	{
-		while (data->env[i][j] && data->env[i][j] != '=')
-			j++;
-		if (!ft_strncmp(data->env[i], var, ft_strlen(var)))
-			break ;
-		j = 0;
-		i++;
-	}
-	free(var);
-	if (data->env[i])
-		return (ft_strdup(data->env[i] + j + 1));
-	else
-		return (ft_strdup(""));
-}
+	qte->modified = ft_strdup("");
+	qte->newbuf = buf;
 
-static	void	ft_modify_process(t_data *data, t_mod *mod)
-{
-	if (*mod->newbuf == '$')
+	while (*qte->newbuf)
 	{
-		mod->var = ft_strdup("$$");
-		mod->newbuf++;
-	}
-	else if (*mod->newbuf == '?')
-	{
-		mod->var = ft_itoa(g_status);
-		mod->newbuf++;
-	}
-	else
-	{
-		mod->i = 0;
-		while (ft_isdigit(*(mod->newbuf + mod->i)) \
-		|| ft_isalpha(*(mod->newbuf + mod->i)))
-			mod->i++;
-		if (mod->i == 0)
-			mod->var = ft_strdup("$");
+		i = 0;
+		printf("뉴버프: %s\n", qte->newbuf);
+		while ((qte->newbuf[i]) && qte->newbuf[i] != '\'' && qte->newbuf[i] != '"')
+			i++;
+		printf("뽑아보자인덱스: %d\n", i );
+		qte->modified = ft_join_free_all(qte->modified, ft_substr(qte->newbuf, 0, i));
+		printf("init modified=%s, %d\n", qte->modified, i);
+		if (qte->newbuf[i] && (!ft_strchr(&qte->newbuf[i + 1], (int)qte->newbuf[i])))
+		{
+			printf("error: unclosed quote\n"); // 에러처리 생각
+			exit(0);
+		}
 		else
 		{
-			mod->var = ft_substr(mod->newbuf, 0, mod->i);
-			mod->var = ft_replace_var(data, mod->var);
-			mod->newbuf += mod->i;
+			if (qte->newbuf[i])
+			{
+				qte->qidx = i++;
+				while (qte->newbuf[i] == qte->newbuf[qte->qidx])
+					i++;
+			}
+			qte->newbuf += i;
+			qte->inqte = ft_substr(qte->newbuf, qte->qidx, i - qte->qidx - 1); //free
+			if (*qte->newbuf == '"' || !*qte->newbuf)
+				qte->modified = ft_join_free_all(qte->modified, ft_modify_envar(data, &var, qte->inqte));
+			else if (*qte->newbuf == '\'')
+				qte->modified = ft_join_free_all(qte->modified, qte->inqte);
+//!!!!!!!!!			// if (*qte->newbuf)
+			// 	qte->newbuf += i + 1; //inquote 개수만큼 더해줘야함
 		}
 	}
-	mod->modified = ft_join_free_all(mod->modified, mod->var);
 }
 
 char	*ft_modify_buf(t_data *data, char *buf)
 {
-	t_mod	mod;
+	t_var	var;
+	t_qte	qte;
 
-	mod.i = 0;
-	mod.j = 0;
-	mod.modified = ft_strdup("");
-	mod.newbuf = buf;
-	while (ft_strchr(mod.newbuf, '$'))
+printf("init buf=%s\n", buf);
+	if (!ft_strchr(buf, '\'') && !ft_strchr(buf, '"'))// quote가 없는 경우
 	{
-		mod.i = 0;
-		while (*(mod.newbuf + mod.i) != '$')
-			mod.i++;
-		mod.modified = ft_join_free_all(mod.modified, \
-							ft_substr(mod.newbuf, 0, mod.i));
-		mod.newbuf += mod.i + 1;
-		ft_modify_process(data, &mod);
+		printf("NO quote\n");
+		ft_modify_envar(data, &var, buf);
+		free(buf);
+		return (var.modified);
 	}
-	mod.newbuf = ft_strdup(mod.newbuf);
-	mod.modified = ft_join_free_all(mod.modified, mod.newbuf);
+	else
+		ft_modify_quote(data, &qte, buf);
 	free(buf);
-	return (mod.modified);
+	return (qte.modified);
 }
+// echo sfd's$USER' asdsd$PATH

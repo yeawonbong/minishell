@@ -3,15 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
+#    By: ybong <ybong@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/17 09:56:13 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/09/18 15:34:45 by ybong            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = ./minishell.c\
 ./ms_modify_buf.c\
+./ms_modify_envar.c\
 ./ms_fill_data.c\
 ./ms_get_cmd_path.c\
 ./ms_utils.c\
@@ -26,7 +27,7 @@ SRCS = ./minishell.c\
 ./redirect/re_redirect.c
 
 CC = gcc
-CFLAGS = -fsanitize=address  -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
+CFLAGS = -fsanitize=address -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include #-lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 AR = ar rcs
 NAME = minishell.a
 OBJS = $(SRCS:.c=.o) 
@@ -41,7 +42,7 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	@make all -C $(LIB_DIR)
 	@cp $(LIB_DIR)/$(LIB) $(NAME)
-	$(AR) $@ $(OBJS)
+	@$(AR) $@ $(OBJS)
 	$(CC) $(CFLAGS) $@ -o $(OUT)
 
 clean :
