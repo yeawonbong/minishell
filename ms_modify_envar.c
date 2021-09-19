@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ms_modify_envar.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/19 23:47:56 by ybong             #+#    #+#             */
+/*   Updated: 2021/09/19 23:47:58 by ybong            ###   ########seoul.kr  */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_replace_var(t_data *data, char *var)
@@ -9,11 +21,12 @@ char	*ft_replace_var(t_data *data, char *var)
 	j = 0;
 	while (data->env[i])
 	{
+		j = 0;
 		while (data->env[i][j] && data->env[i][j] != '=')
 			j++;
-		if (!ft_strncmp(data->env[i], var, ft_strlen(var)))
+		if (!ft_strncmp(data->env[i], var, j) \
+		&& !ft_strncmp(data->env[i], var, ft_strlen(var)))
 			break ;
-		j = 0;
 		i++;
 	}
 	free(var);
@@ -50,7 +63,6 @@ void	ft_envar_process(t_data *data, t_var *var)
 			var->newbuf += var->i;
 		}
 	}
-	var->modified = ft_join_free_all(var->modified, var->var);
 }
 
 char	*ft_modify_envar(t_data *data, t_var *var, char *buf)
@@ -66,9 +78,9 @@ char	*ft_modify_envar(t_data *data, t_var *var, char *buf)
 							ft_substr(var->newbuf, 0, var->i));
 		var->newbuf += var->i + 1;
 		ft_envar_process(data, var);
+		var->modified = ft_join_free_all(var->modified, var->var);
 	}
 	var->newbuf = ft_strdup(var->newbuf);
 	var->modified = ft_join_free_all(var->modified, var->newbuf);
-	// free(buf);
 	return (var->modified);
 }
