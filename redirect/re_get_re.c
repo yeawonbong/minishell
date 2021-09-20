@@ -3,25 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   re_get_re.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:21 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 13:54:04 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/20 14:59:07 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static	void	init_re(t_re *re, char **space)
+static	void	init_re(t_re *re, char *cmds)
 {
 	int		i;
 	int		count;
 
+	re->space = ft_split(re->parse = parse_redir(cmds), ' ');
 	i = 0;
 	count = 0;
-	while (space[i])
+	while (re->space[i])
 	{
-		if (ft_strchr("<>", space[i][0]))
+		if (ft_strchr("<>", re->space[i][0]))
 			count++;
 		i++;
 	}
@@ -72,28 +73,29 @@ static	void	redirect_error(char *str)
 
 int	get_redirect(char *cmds, t_re *re)
 {
-	char	**space;
 	int		i;
 
 	i = 0;
-	space = ft_split(parse_redir(cmds), ' ');
-	init_re(re, space);
-	while (space[i])
+	init_re(re, cmds);
+	while (re->space[i])
 	{
-		if (ft_strchr("<>", space[i][0]))
+		if (ft_strchr("<>", re->space[i][0]))
 		{
-			get_type(re, space[i], re->re_count);
-			if (space[i + 1] == NULL || ft_strchr("<>", space[i + 1][0]))
+			get_type(re, re->space[i], re->re_count);
+			if (re->space[i + 1] == NULL || \
+						ft_strchr("<>", re->space[i + 1][0]))
 			{
-				redirect_error(space[i + 1]);
+				redirect_error(re->space[i + 1]);
 				return (-1);
 			}
 			else
-				re->re_file[re->re_count++] = ft_strdup(space[++i]);
+				re->re_file[re->re_count++] = ft_strdup(re->space[++i]);
 		}
 		else
-			re->cmd_j = join_cmd(space[i], re->cmd_j);
+			re->cmd_j = join_cmd(re->space[i], re->cmd_j);
 		i++;
 	}
+	free(re->parse);
+	ft_split_free(re->space);
 	return (0);
 }

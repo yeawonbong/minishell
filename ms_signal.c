@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 09:34:48 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 14:15:27 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 14:44:28 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	sig_set(int i)
 	else if (i == 2)
 	{
 		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIGINT);
+		signal(SIGQUIT, SIG_DFL);
 	}
 }
 
@@ -55,7 +55,6 @@ void	child_handler(int signo)
 	if (signo == SIGQUIT)
 	{
 		printf("Quit: 3\n");
-			// printf("%c[K\n", 27);
 		g_status = 131;
 	}
 }
@@ -65,6 +64,7 @@ void	redirect_handler(int signo)
 	if (signo == SIGINT)
 	{
 		printf("%c[K\n", 27);
+		printf("\n");
 		g_status = 130;
 	}
 }

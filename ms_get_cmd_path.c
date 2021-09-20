@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/02 19:11:37 by sma               #+#    #+#             */
-/*   Updated: 2021/09/18 12:32:13 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 15:00:59 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,13 @@ static	char	*path_join(char **paths, char *cmds)
 	while (paths && paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(temp, cmds);
+		path = ft_strjoin_free(temp, cmds);
 		fd = open(path, O_RDONLY);
 		if (fd > 0)
 		{
 			close(fd);
-			free(temp);
 			return (path);
 		}
-		free(temp);
 		free(path);
 		close(fd);
 		i++;

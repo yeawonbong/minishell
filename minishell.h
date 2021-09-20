@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 13:16:45 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 15:52:51 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ typedef struct s_re
 {
 	char	**re_file;
 	char	*cmd_j;
+	char	**space;
+	char	*parse;
 	int		*re_type;
 	int		re_argc;
 	int		re_count;
@@ -90,7 +92,7 @@ typedef struct s_unset
 	char	*var;
 	int		i;
 	int		j;
-	int		k;
+	int		u;
 	int		t;
 }				t_unset;
 /*

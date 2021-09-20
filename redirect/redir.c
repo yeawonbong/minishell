@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 18:25:13 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/20 15:02:45 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ int	redirect(t_data *data, int idx)
 	data->cmds[idx] = re.cmd_j;
 	if (redir_exec(&re) == -1)
 		return (-1);
+	ft_split_free(re.re_file);
+	free(re.re_type);
 	if (check_builtin(data->cmds[data->idx]))
 		ft_builtins(data);
-	else //if (re.re_type[re.re_count] != 4)
+	else
 	{
 		if (exec_in_child(data) == -1)
 			return (-1) ;

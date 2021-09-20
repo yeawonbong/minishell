@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 14:16:11 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 15:04:43 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	ft_error(t_data *data)
 		ft_split_free(cmd_args);
 		return (-1);
 	}
+	ft_split_free(cmd_args);
 	return (0);
 }
 
@@ -75,6 +76,7 @@ int	exec_in_child(t_data *data)
 		exit (1);
 	else
 	{
+		dup2(data->stdio[1], STDOUT_FILENO);
 		sig_set(1);
 		wait(&sig_num);
 		sig_set(0);
