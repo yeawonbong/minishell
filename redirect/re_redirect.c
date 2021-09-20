@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   re_redirect.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 18:42:23 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/20 13:16:28 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	redir_4(char *str)
 	{
 		signal(SIGINT, redirect_handler);
 		wait(&sig_num);
+		sig_set(0);
 		if (WIFSIGNALED(sig_num) && WTERMSIG(sig_num) == 2)
 			return (-1);
 		g_status = WEXITSTATUS(sig_num);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
+#    By: ybong <ybong@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/19 19:56:27 by ybong            ###   ########seoul.kr   #
+#    Updated: 2021/09/20 12:12:51 by ybong            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,8 +27,8 @@ SRCS = ./minishell.c\
 ./redirect/re_redirect.c
 
 CC = gcc
-#CFLAGS = -fsanitize=address -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include #-lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
-CFLAGS = -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
+CFLAGS = -fsanitize=address -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include #-lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
+# CFLAGS = -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 AR = ar rcs
 NAME = minishell.a
 OBJS = $(SRCS:.c=.o) 

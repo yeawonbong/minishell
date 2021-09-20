@@ -3,16 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ms_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 09:34:48 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 18:41:02 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/20 14:15:27 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
-void sigint_handler(int signo)
+void	sig_set(int i)
+{
+	if (i == 0)
+	{
+		signal(SIGINT, &sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (i == 1)
+	{
+		signal(SIGINT, child_handler);
+		signal(SIGQUIT, child_handler);
+	}
+	else if (i == 2)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIGINT);
+	}
+}
+
+void	sigint_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
@@ -26,7 +45,7 @@ void sigint_handler(int signo)
 	}
 }
 
-void child_handler(int signo)
+void	child_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
@@ -36,17 +55,16 @@ void child_handler(int signo)
 	if (signo == SIGQUIT)
 	{
 		printf("Quit: 3\n");
+			// printf("%c[K\n", 27);
 		g_status = 131;
 	}
 }
 
-void redirect_handler(int signo)
+void	redirect_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
 		printf("%c[K\n", 27);
-        // printf("\n");
 		g_status = 130;
 	}
-	signal(SIGINT, sigint_handler);
 }

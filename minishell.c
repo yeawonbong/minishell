@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/18 16:44:59 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 14:16:11 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static	char	*init_data(t_data *data)
 	char	*prompt;
 
 	prompt = ft_strjoin_free(ft_pwd(), "$ ");
-	prompt = ft_join_free_all(ft_strdup("ybong_sma@"), prompt);	
+	prompt = ft_join_free_all(ft_strdup("ybong_sma@"), prompt);
 	buf = readline(prompt);
 	if (buf == 0)
 	{
@@ -45,7 +45,11 @@ static	char	*init_data(t_data *data)
 		add_history(buf);
 	free(prompt);
 	if (ft_strchr(buf, '$') || ft_strchr(buf, '\'') || ft_strchr(buf, '"'))
+	{
 		buf = ft_modify_buf(data, buf);
+		if (!buf)
+			return (NULL);
+	}
 	data->cmds = ft_split(buf, '|');
 	data->idx = 0;
 	data->redirect_flag = 0;
@@ -56,23 +60,28 @@ int	exec_in_child(t_data *data)
 {
 	pid_t	pid;
 	int		sig_num;
+
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
+		sig_set(2);
 		if_pipe_dup2(data, data->fd[1], STDOUT_FILENO, data->fd[0]);
 		get_cmd_path(data);
 		if (execve(data->path, data->cmd_args, data->env) == -1)
 			printf("minishell : %s\n", strerror(errno));
+		exit(1);
 	}
+	else if (pid == -1)
+		exit (1);
 	else
 	{
-		signal(SIGINT, child_handler);
+		sig_set(1);
 		wait(&sig_num);
-		if (WIFSIGNALED(sig_num) && WTERMSIG(sig_num) == 2)
+		sig_set(0);
+		if ((WIFSIGNALED(sig_num)))
 			return (-1);
 	}
-	g_status = WEXITSTATUS(g_status);
+	g_status = WEXITSTATUS(sig_num);
 	return (ft_error(data));
 }
 
@@ -115,14 +124,19 @@ int	main(int argc, char **argv, char **envp)
 	buf = NULL;
 	ft_filldata(&data, envp);
 	signal(SIGINT, &sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+	sig_set(0);
 	while (1)
 	{
 		buf = init_data(&data);
-		exec_cmd(&data);
-		dup2(data.stdio[0], STDIN_FILENO);
-		dup2(data.stdio[1], STDOUT_FILENO);
-		free(buf);
-		ft_split_free(data.cmds);
+		if (buf != NULL)
+		{
+			exec_cmd(&data);
+			dup2(data.stdio[0], STDIN_FILENO);
+			dup2(data.stdio[1], STDOUT_FILENO);
+			free(buf);
+			ft_split_free(data.cmds);
+		}
 	}
 	return (0);
 }

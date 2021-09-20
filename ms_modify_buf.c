@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_modify_buf.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/19 23:46:08 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/20 12:46:00 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static void	ft_quote_process(t_data *data, t_qte *qte, char *buf, t_var var)
 								ft_modify_envar(data, &var, qte->inqte));
 	else if (*qte->newbuf == '\'')
 		qte->modified = ft_join_free_all(qte->modified, qte->inqte);
-	qte->newbuf += i + 1;
+	if (*qte->newbuf)
+		qte->newbuf += i + 1;
 }
 
 static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
@@ -48,10 +49,12 @@ static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
 		qte->modified = ft_join_free_all(qte->modified, \
 										ft_substr(qte->newbuf, 0, i));
 		qte->newbuf = qte->newbuf + i;
-		if (qte->newbuf && (!ft_strchr(qte->newbuf + 1, (int)*qte->newbuf)))
+		if (*qte->newbuf && (!ft_strchr(qte->newbuf + 1, (int)*qte->newbuf)))
 		{
 			printf("syntax error unclosed quote\n"); // 에러처리 생각
-			exit(0);
+			free(qte->modified);
+			qte->modified = NULL;
+			break ;
 		}
 		else
 			ft_quote_process(data, qte, buf, var);

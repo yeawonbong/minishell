@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/18 15:58:26 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 13:16:45 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,9 +155,10 @@ int		redir_4(char *str);
 /*
 **	signal
 */
-void sigint_handler(int signo);
-void child_handler(int signo);
-void redirect_handler(int signo);
+void	sigint_handler(int signo);
+void	child_handler(int signo);
+void	redirect_handler(int signo);
+void	sig_set(int i);
 
 
 #endif
