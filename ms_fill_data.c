@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:29:08 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 19:24:35 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:14:48 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	ft_filldata(t_data *data, char **envp)
 	data->env_height = ft_strarr_height(envp);
 	data->env = (char **)malloc(sizeof(char *) * (data->env_height + 1));
 	data->env[data->env_height] = NULL;
-	printf("height=%d\n", data->env_height);
 	while (envp[i])
 	{
 		data->env[i] = ft_strdup(envp[i]);

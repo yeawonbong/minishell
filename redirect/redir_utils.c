@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 19:15:28 by sma               #+#    #+#             */
-/*   Updated: 2021/09/20 20:02:53 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:22:56 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	child_in_buf(int re_fd[2], char *buf, int fd, char *str)
 {
 	pid_t	pid;
 	int		sig_num;
-	
+
 	pid = fork();
 	sig_num = 0;
 	if (pid == 0)

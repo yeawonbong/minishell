@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:40:36 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 19:28:56 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:21:58 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,6 @@ void	child_exec(t_data *data)
 	if_pipe_dup2(data, data->fd[1], STDOUT_FILENO, data->fd[0]);
 	get_cmd_path(data);
 	if (execve(data->path, data->cmd_args, data->env) == -1)
-		printf("minishell : %s\n", strerror(errno));
+		printf("minish : %s\n", strerror(errno));
 	exit(1);
 }

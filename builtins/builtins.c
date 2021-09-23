@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:58:14 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/17 18:31:46 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/23 13:25:43 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	ft_builtins(t_data *data)
 	char	*cmd;
 
 	i = data->idx;
-	// redirect(data, data->idx);
 	cmd = ft_strtrim(data->cmds[i], " ");
 	if (!(ft_strncmp(cmd, "exit", 4)) && (!*(cmd + 4) || *(cmd + 4) == ' '))
 	{

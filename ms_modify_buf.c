@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 19:48:08 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:20:57 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,20 @@ static void	ft_quote_process(t_data *data, t_qte *qte, t_var var)
 		qte->newbuf += i + 1;
 }
 
+static void	ft_quote_error(t_qte *qte)
+{
+	printf("minish: syntax error unclosed quote\n");
+	free(qte->modified);
+	qte->modified = NULL;
+	g_status = 1;
+}
+
 static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
 {
 	t_var	var;
 	char	*temp;
 	int		i;
 
-	i = 0;
 	qte->modified = ft_strdup("");
 	qte->newbuf = buf;
 	while (*qte->newbuf)
@@ -57,9 +64,7 @@ static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
 		qte->newbuf = qte->newbuf + i;
 		if (*qte->newbuf && (!ft_strchr(qte->newbuf + 1, (int)*qte->newbuf)))
 		{
-			printf("syntax error unclosed quote\n");
-			free(qte->modified);
-			qte->modified = NULL;
+			ft_quote_error(qte);
 			break ;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 20:00:55 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:34:33 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,9 @@ typedef struct s_qte
 	char	*modified;
 	char	*inqte;
 	char	*newbuf;
-	int 	i;
-	int		qidx; //open
-	// int		q2; //close
-	// int		qteidx;
-	// int		pairidx;
+	int		i;
+	int		qidx;
 }				t_qte;
-
 
 typedef struct s_utils
 {
@@ -100,15 +96,21 @@ typedef struct s_unset
 */
 void	get_cmd_path(t_data *data);
 int		exec_in_child(t_data *data);
+
+/*
+**	ms_utils.c
+*/
+void	ft_split_free(char **strarr);
+int		longer_len(char *str, char *str2);
+int		ft_strarr_height(char **env);
+char	*ft_join_free_all(char *str1, char *str2);
 void	child_exec(t_data *data);
 
 /*
 ** ms_fill_data.c
 */
-void	ft_copy_env(char **src, char **dest);
-void	ft_sort_env(t_data *data);
-void	ft_filldata(t_data *data, char **envp);
 void	if_pipe_dup2(t_data *data, int fd1, int fd2, int toclose);
+void	ft_filldata(t_data *data, char **envp);
 
 /*
 **  ms_modify_buf (quote, envar)
@@ -117,7 +119,6 @@ char	*ft_modify_buf(t_data *data, char *buf);
 char	*ft_replace_var(t_data *data, char *var);
 void	ft_envar_process(t_data *data, t_var *var);
 char	*ft_modify_envar(t_data *data, t_var *var, char *buf);
-
 
 /*
 **	builtins
@@ -134,15 +135,6 @@ char	*ft_pwd(void);
 void	ft_echo(char *cmd);
 
 /*
-**	ms_utils.c
-*/
-void	ft_split_free(char **strarr);
-int		longer_len(char *str, char *str2);
-int		ft_strarr_height(char **env);
-char	*parse_redir(char *cmds);
-char	*ft_join_free_all(char *str1, char *str2);
-
-/*
 **	redirect
 */
 char	*ft_strjoin_free(char *dest, char *src);
@@ -157,12 +149,12 @@ int		redir_2(char *file);
 int		redir_3(char *file);
 int		redir_4(char *str);
 
-
 /*
 **	signal
 */
+void	sig_set(int i);
 void	sigint_handler(int signo);
 void	child_handler(int signo);
 void	redirect_handler(int signo);
-void	sig_set(int i);
+
 #endif

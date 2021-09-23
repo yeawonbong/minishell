@@ -6,7 +6,7 @@
 #    By: sma <sma@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/20 20:03:03 by sma              ###   ########.fr        #
+#    Updated: 2021/09/23 13:37:06 by sma              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS = ./minishell.c\
 ./builtins/bi_env.c\
 ./builtins/bi_in_child.c\
 ./builtins/bi_in_parent.c\
+./builtins/bi_unset.c\
 ./builtins/builtins.c\
 ./redirect/re_insert_space.c\
 ./redirect/re_get_re.c\
@@ -29,8 +30,7 @@ SRCS = ./minishell.c\
 
 CC = gcc #-fsanitize=address
 CFLAGS = -Wall -Wextra -Werror -I ~/.brew/opt/readline/include
-LEADFLAGS =  -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include #-lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
-#  -fsanitize=addressCFLAGS = -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
+LEADFLAGS =  -lreadline -L ~/.brew/opt/readline/lib
 AR = ar rcs
 NAME = minishell.a
 OBJS = $(SRCS:.c=.o) 

@@ -6,13 +6,13 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 19:37:49 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:30:30 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_error(t_data *data)
+static int	ft_error(t_data *data)
 {
 	char	**cmd_args;
 
@@ -29,7 +29,7 @@ int	ft_error(t_data *data)
 	return (0);
 }
 
-static	char	*init_data(t_data *data)
+static char	*init_data(t_data *data)
 {
 	char	*buf;
 	char	*prompt;
