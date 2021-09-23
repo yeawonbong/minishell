@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_in_parent.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 16:39:59 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 19:27:59 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static int	ft_unset_valid(t_data *data, char **unset_arg)
 			if (!ft_strncmp(u.var, unset_arg[u.u], \
 					longer_len(u.var, unset_arg[u.u])))
 			{
-				break;
+				break ;
 			}
 			u.u++;
 		}
@@ -125,7 +125,7 @@ static int	ft_unset_valid(t_data *data, char **unset_arg)
 		free(u.var);
 		u.i++;
 	}
-	return(count);
+	return (count);
 }
 
 void	ft_unset(t_data *data)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ybong <ybong@student.42.fr>                +#+  +:+       +#+         #
+#    By: sma <sma@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/20 16:39:04 by ybong            ###   ########.fr        #
+#    Updated: 2021/09/20 20:03:03 by sma              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,10 +24,12 @@ SRCS = ./minishell.c\
 ./redirect/re_insert_space.c\
 ./redirect/re_get_re.c\
 ./redirect/redir.c\
-./redirect/re_redirect.c
+./redirect/re_redirect.c\
+./redirect/redir_utils.c
 
 CC = gcc #-fsanitize=address
-CFLAGS =  -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include #-lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
+CFLAGS = -Wall -Wextra -Werror -I ~/.brew/opt/readline/include
+LEADFLAGS =  -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include #-lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 #  -fsanitize=addressCFLAGS = -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 AR = ar rcs
 NAME = minishell.a
@@ -44,7 +46,7 @@ $(NAME) : $(OBJS)
 	@make all -C $(LIB_DIR)
 	@cp $(LIB_DIR)/$(LIB) $(NAME)
 	@$(AR) $@ $(OBJS)
-	$(CC) $(CFLAGS) $@ -o $(OUT)
+	$(CC) $(CFLAGS) $@ -o $(OUT) $(LEADFLAGS)
 
 clean :
 	@make clean -C $(LIB_DIR)

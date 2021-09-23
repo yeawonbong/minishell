@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 15:52:51 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 20:00:55 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ typedef struct s_unset
 */
 void	get_cmd_path(t_data *data);
 int		exec_in_child(t_data *data);
+void	child_exec(t_data *data);
 
 /*
 ** ms_fill_data.c
@@ -148,6 +149,9 @@ char	*ft_strjoin_free(char *dest, char *src);
 int		redirect(t_data *data, int idx);
 int		get_redirect(char *cmds, t_re *re);
 char	*parse_redir(char *cmds);
+void	close_dup_fd(int fd[2]);
+int		child_in_buf(int re_fd[2], char *buf, int fd, char *str);
+void	get_buf(int re_fd[2], char *buf, int fd, char *str);
 int		redir_1(char *file);
 int		redir_2(char *file);
 int		redir_3(char *file);
@@ -161,6 +165,4 @@ void	sigint_handler(int signo);
 void	child_handler(int signo);
 void	redirect_handler(int signo);
 void	sig_set(int i);
-
-
 #endif

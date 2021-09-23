@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   re_redirect.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 13:16:28 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 20:01:54 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	redir_1(char *file)
 {
 	int		fd;
-	// pid_t	pid;
+
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -31,6 +31,7 @@ int	redir_1(char *file)
 int	redir_2(char *file)
 {
 	int		fd;
+
 	fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 	{
@@ -88,31 +89,14 @@ void	get_buf(int re_fd[2], char *buf, int fd, char *str)
 int	redir_4(char *str)
 {
 	int		re_fd[2];
-	pid_t	pid;
 	char	*buf;
 	int		fd;
-	int		sig_num;
 
 	buf = NULL;
 	fd = dup(STDOUT_FILENO);
 	pipe(re_fd);
-	pid = fork();
-	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		get_buf(re_fd, buf, fd, str);
-	}
-	else
-	{
-		signal(SIGINT, redirect_handler);
-		wait(&sig_num);
-		sig_set(0);
-		if (WIFSIGNALED(sig_num) && WTERMSIG(sig_num) == 2)
-			return (-1);
-		g_status = WEXITSTATUS(sig_num);
-	}
-	dup2(re_fd[0], STDIN_FILENO);
-	close(re_fd[1]);
-	close(re_fd[0]);
+	if (child_in_buf(re_fd, buf, fd, str) == -1)
+		return (-1);
+	close_dup_fd(re_fd);
 	return (0);
 }

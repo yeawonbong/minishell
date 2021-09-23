@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ms_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 09:34:48 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 14:44:28 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 19:38:37 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 void	sig_set(int i)
 {

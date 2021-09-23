@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 15:04:43 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 19:37:49 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,7 @@ int	exec_in_child(t_data *data)
 
 	pid = fork();
 	if (pid == 0)
-	{
-		sig_set(2);
-		if_pipe_dup2(data, data->fd[1], STDOUT_FILENO, data->fd[0]);
-		get_cmd_path(data);
-		if (execve(data->path, data->cmd_args, data->env) == -1)
-			printf("minishell : %s\n", strerror(errno));
-		exit(1);
-	}
+		child_exec(data);
 	else if (pid == -1)
 		exit (1);
 	else

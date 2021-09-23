@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_fill_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:29:08 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/11 16:58:45 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/20 19:24:35 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	if_pipe_dup2(t_data *data, int fd1, int fd2, int toclose)
 		dup2(fd1, fd2);
 		close(toclose);
 	}
-	
 }
 
 void	ft_filldata(t_data *data, char **envp)

@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ms_modify_buf.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:28:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 17:02:03 by ybong            ###   ########.fr       */
+/*   Updated: 2021/09/20 19:48:08 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_quote_process(t_data *data, t_qte *qte, char *buf, t_var var)
+static void	ft_quote_process(t_data *data, t_qte *qte, t_var var)
 {
 	int		i;
-	
+
+	i = 0;
 	if (*qte->newbuf)
 	{
 		i = 1;
@@ -51,7 +52,7 @@ static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
 										&& qte->newbuf[i] != '"')
 			i++;
 		qte->modified = ft_join_free_all(qte->modified, \
-				ft_modify_envar(data, &var, temp = ft_substr(qte->newbuf, 0, i)));
+			ft_modify_envar(data, &var, temp = ft_substr(qte->newbuf, 0, i)));
 		free(temp);
 		qte->newbuf = qte->newbuf + i;
 		if (*qte->newbuf && (!ft_strchr(qte->newbuf + 1, (int)*qte->newbuf)))
@@ -62,7 +63,7 @@ static void	ft_modify_quote(t_data *data, t_qte *qte, char *buf)
 			break ;
 		}
 		else
-			ft_quote_process(data, qte, buf, var);
+			ft_quote_process(data, qte, var);
 	}
 }
 
@@ -71,7 +72,7 @@ char	*ft_modify_buf(t_data *data, char *buf)
 	t_var	var;
 	t_qte	qte;
 
-	if (!ft_strchr(buf, '\'') && !ft_strchr(buf, '"')) //noquote
+	if (!ft_strchr(buf, '\'') && !ft_strchr(buf, '"'))
 	{
 		ft_modify_envar(data, &var, buf);
 		free(buf);
