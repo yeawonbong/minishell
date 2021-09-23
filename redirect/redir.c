@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 20:02:00 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:51:00 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strjoin_free(char *dest, char *src)
 	return (dest);
 }
 
-static	int	redir_exec(t_re *re)
+static	int	redir_exec(t_data *data, t_re *re)
 {
 	int		i;
 	pid_t	pid;
@@ -33,11 +33,11 @@ static	int	redir_exec(t_re *re)
 	while (i < re->re_argc)
 	{
 		if (re->re_type[i] == 1)
-			error = redir_1(re->re_file[i]);
+			error = redir_1(data, re->re_file[i]);
 		else if (re->re_type[i] == 2)
-			error = redir_2(re->re_file[i]);
+			error = redir_2(data, re->re_file[i]);
 		else if (re->re_type[i] == 3)
-			error = redir_3(re->re_file[i]);
+			error = redir_3(data, re->re_file[i]);
 		else if (re->re_type[i] == 4)
 			error = redir_4(re->re_file[i]);
 		if (error == -1)
@@ -58,7 +58,7 @@ int	redirect(t_data *data, int idx)
 	}
 	free(data->cmds[idx]);
 	data->cmds[idx] = re.cmd_j;
-	if (redir_exec(&re) == -1)
+	if (redir_exec(data, &re) == -1)
 	{
 		ft_split_free(re.re_file);
 		free(re.re_type);

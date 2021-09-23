@@ -6,19 +6,21 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 20:01:54 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:49:15 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	redir_1(char *file)
+int	redir_1(t_data *data, char *file)
 {
 	int		fd;
 
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
+		dup2(data->stdio[0], STDIN_FILENO);
+		dup2(data->stdio[1], STDOUT_FILENO);
 		printf("error : %s\n", strerror(errno));
 		g_status = 1;
 		return (-1);
@@ -28,13 +30,15 @@ int	redir_1(char *file)
 	return (0);
 }
 
-int	redir_2(char *file)
+int	redir_2(t_data *data, char *file)
 {
 	int		fd;
 
 	fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 	{
+		dup2(data->stdio[0], STDIN_FILENO);
+		dup2(data->stdio[1], STDOUT_FILENO);
 		printf("error : %s\n", strerror(errno));
 		g_status = 1;
 		return (-1);
@@ -44,13 +48,15 @@ int	redir_2(char *file)
 	return (0);
 }
 
-int	redir_3(char *file)
+int	redir_3(t_data *data, char *file)
 {
 	int		fd;
 
 	fd = open(file, O_RDWR, 0644);
 	if (fd < 0)
 	{
+		dup2(data->stdio[0], STDIN_FILENO);
+		dup2(data->stdio[1], STDOUT_FILENO);
 		printf("error : %s\n", strerror(errno));
 		g_status = 1;
 		return (-1);

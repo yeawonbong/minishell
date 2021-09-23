@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:58:14 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:25:43 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 15:17:29 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	ft_builtins(t_data *data)
 	}
 	if (!ft_builtins_in_parents(data, cmd))
 	{
-		g_status = 0;
 		free(cmd);
 		return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:34:33 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 13:49:55 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,9 @@ char	*parse_redir(char *cmds);
 void	close_dup_fd(int fd[2]);
 int		child_in_buf(int re_fd[2], char *buf, int fd, char *str);
 void	get_buf(int re_fd[2], char *buf, int fd, char *str);
-int		redir_1(char *file);
-int		redir_2(char *file);
-int		redir_3(char *file);
+int		redir_1(t_data *data, char *file);
+int		redir_2(t_data *data, char *file);
+int		redir_3(t_data *data, char *file);
 int		redir_4(char *str);
 
 /*

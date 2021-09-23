@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:24:58 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/23 15:18:43 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,13 @@ void	ft_cd(t_data *data)
 		chdir(path);
 		return ;
 	}
-	chdir(cd_args[1]);
+	if (chdir(cd_args[1]) == -1)
+	{
+		printf("minish : cd: no such file or directory: %s\n", cd_args[1]);
+		g_status = 1;
+		ft_split_free(cd_args);
+		return ;
+	}
 	ft_split_free(cd_args);
+	g_status = 0;
 }
