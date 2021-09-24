@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_in_parent.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 15:18:43 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/24 16:38:39 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,19 @@ void	ft_export(t_data *data, int child)
 	ft_split_free(exp_arg);
 }
 
+static void	cd_err(char **cd_args)
+{
+	if (chdir(cd_args[1]) == -1)
+	{
+		printf("minish : cd: no such file or directory: %s\n", cd_args[1]);
+		g_status = 1;
+		ft_split_free(cd_args);
+		return ;
+	}
+	ft_split_free(cd_args);
+	g_status = 0;
+}
+
 void	ft_cd(t_data *data)
 {
 	char	**cd_args;
@@ -91,13 +104,5 @@ void	ft_cd(t_data *data)
 		chdir(path);
 		return ;
 	}
-	if (chdir(cd_args[1]) == -1)
-	{
-		printf("minish : cd: no such file or directory: %s\n", cd_args[1]);
-		g_status = 1;
-		ft_split_free(cd_args);
-		return ;
-	}
-	ft_split_free(cd_args);
-	g_status = 0;
+	cd_err(cd_args);
 }

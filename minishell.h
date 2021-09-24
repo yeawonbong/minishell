@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/24 15:47:38 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/24 16:43:05 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,13 @@ typedef struct s_unset
 	int		u;
 	int		t;
 }				t_unset;
+
 /*
 ** minishell.c
 */
 void	get_cmd_path(t_data *data);
 int		exec_in_child(t_data *data);
 char	**ft_split_with(char c, char *buf, char **arr, t_data *data);
-
 
 /*
 **	ms_utils.c

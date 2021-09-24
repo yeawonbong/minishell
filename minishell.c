@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/24 15:39:58 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/24 16:41:32 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ static int	ft_error(t_data *data)
 {
 	char	**cmd_args;
 
+	cmd_args = ft_split(data->cmds[data->idx], ' ');
 	if (g_status == 127)
 	{
-		cmd_args = ft_split(data->cmds[data->idx], ' ');
 		dup2(data->stdio[1], STDOUT_FILENO);
 		dup2(data->stdio[0], STDIN_FILENO);
 		printf("minish: %s: command not found\n", cmd_args[0]);
 		ft_split_free(cmd_args);
 		return (-1);
 	}
-	// ft_split_free(cmd_args);
+	ft_split_free(cmd_args);
 	return (0);
 }
 
@@ -45,25 +45,12 @@ static char	*init_data(t_data *data)
 	if (*buf)
 		add_history(buf);
 	free(prompt);
-// if (ft_strchr(buf, '$') || ft_strchr(buf, '\'') || ft_strchr(buf, '"'))
-// {
-// 	buf = ft_modify_buf(data, buf);
-// 	if (!buf)
-// 		return (NULL);
-// }
+	data->redirect_flag = 0;
 	data->cmds = ft_split("", ' ');
 	data->cmds = ft_split_with('|', buf, data->cmds, data);
 	if (data->cmds == NULL)
 		return (NULL);
 	data->idx = 0;
-	data->redirect_flag = 0;
-
-	// int o=0;
-    // while (data->cmds[o])
-    // {
-    //     printf("cmmd = |%s\n", data->cmds[o]);
-    //     o++;
-    // }
 	return (buf);
 }
 
@@ -95,12 +82,9 @@ static	void	exec_cmd(t_data *data)
 	while (data->cmds[data->idx])
 	{
 		pipe(data->fd);
-		data->redirect_flag = 0;
-		if (ft_strchr(data->cmds[data->idx], '<') || \
-						ft_strchr(data->cmds[data->idx], '>'))
-			data->redirect_flag = 1;
 		if (data->redirect_flag)
 		{
+			data->redirect_flag--;
 			if (redirect(data, data->idx) == -1)
 				break ;
 		}
