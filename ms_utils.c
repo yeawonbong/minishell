@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:40:36 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:21:58 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/24 16:56:55 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	child_exec(t_data *data)
 	if_pipe_dup2(data, data->fd[1], STDOUT_FILENO, data->fd[0]);
 	get_cmd_path(data);
 	if (execve(data->path, data->cmd_args, data->env) == -1)
-		printf("minish : %s\n", strerror(errno));
-	exit(1);
+	{
+		// printf("minish : %s : %s\n", data->path, strerror(errno));
+		exit(127);
+	}
 }

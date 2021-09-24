@@ -6,7 +6,7 @@
 /*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/24 16:41:32 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/24 17:03:47 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ static int	ft_error(t_data *data)
 	{
 		dup2(data->stdio[1], STDOUT_FILENO);
 		dup2(data->stdio[0], STDIN_FILENO);
-		printf("minish: %s: command not found\n", cmd_args[0]);
+		if (ft_strchr('/', cmd_args[0]))
+			printf("minish: %s: No such file or directory\n", cmd_args[0]);
+		else
+			printf("minish: %s: command not found\n", cmd_args[0]);
 		ft_split_free(cmd_args);
 		return (-1);
 	}
