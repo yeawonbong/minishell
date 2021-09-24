@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_fill_data.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:29:08 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:14:48 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/24 14:47:00 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ void	ft_filldata(t_data *data, char **envp)
 	data->pipe_flag = 0;
 	data->redirect_flag = 0;
 	ft_sort_env(data);
+	// data->cmd_args
 	return ;
 }

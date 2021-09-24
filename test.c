@@ -11,7 +11,7 @@ int main(){
     char **cmd;
     char *cmds[3] = {"start", 0};
 
-    char *buf = "cat | grep ggg\"abc\'|cc\" | echo \"hihi|ls\"";
+    char *buf = "echo \"grep gggabc|cc\" | echo \"hihi|ls\"";
 
     cmd = cmds;
     cmd = ft_split_with('|', buf, cmd);

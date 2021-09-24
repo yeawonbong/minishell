@@ -3,14 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sma <sma@student.42.fr>                    +#+  +:+       +#+         #
+#    By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/23 13:37:06 by sma              ###   ########.fr        #
+#    Updated: 2021/09/24 14:20:07 by ybong            ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = ./minishell.c\
+./ms_split.c\
 ./ms_modify_buf.c\
 ./ms_modify_envar.c\
 ./ms_fill_data.c\
@@ -29,8 +30,9 @@ SRCS = ./minishell.c\
 ./redirect/redir_utils.c
 
 CC = gcc #-fsanitize=address
-CFLAGS = -Wall -Wextra -Werror -I ~/.brew/opt/readline/include
-LEADFLAGS =  -lreadline -L ~/.brew/opt/readline/lib
+CFLAGS = -Wall -Wextra -Werror -I /usr/local/opt/readline/include#-I ~/.brew/opt/readline/include  # -I ~/.brew/opt/readline/include
+# LEADFLAGS =  -lreadline -L ~/.brew/opt/readline/lib
+LEADFLAGS = -fsanitize=address -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 AR = ar rcs
 NAME = minishell.a
 OBJS = $(SRCS:.c=.o) 

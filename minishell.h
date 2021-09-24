@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:49:55 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/24 15:47:38 by ybong            ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ typedef struct s_unset
 */
 void	get_cmd_path(t_data *data);
 int		exec_in_child(t_data *data);
+char	**ft_split_with(char c, char *buf, char **arr, t_data *data);
+
 
 /*
 **	ms_utils.c
