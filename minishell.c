@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/24 17:03:47 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/25 17:03:23 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	ft_error(t_data *data)
 	{
 		dup2(data->stdio[1], STDOUT_FILENO);
 		dup2(data->stdio[0], STDIN_FILENO);
-		if (ft_strchr('/', cmd_args[0]))
+		if (ft_strchr(cmd_args[0], '/'))
 			printf("minish: %s: No such file or directory\n", cmd_args[0]);
 		else
 			printf("minish: %s: command not found\n", cmd_args[0]);
@@ -36,7 +36,8 @@ static char	*init_data(t_data *data)
 {
 	char	*buf;
 	char	*prompt;
-
+	char	*temp;
+	
 	prompt = ft_strjoin_free(ft_pwd(), "$ ");
 	prompt = ft_join_free_all(ft_strdup("ybong_sma@"), prompt);
 	buf = readline(prompt);
@@ -50,9 +51,17 @@ static char	*init_data(t_data *data)
 	free(prompt);
 	data->redirect_flag = 0;
 	data->cmds = ft_split("", ' ');
+	temp = buf;
+	buf = ft_strtrim(temp, "\t ");
+	free(temp);
 	data->cmds = ft_split_with('|', buf, data->cmds, data);
-	if (data->cmds == NULL)
-		return (NULL);
+	printf("%s|\n", data->cmds[1]);
+	if (data->cmds == 0)
+	{
+		data->cmds = ft_split("", ' ');
+		free(buf);
+		return (ft_strdup(""));
+	}
 	data->idx = 0;
 	return (buf);
 }
@@ -85,9 +94,8 @@ static	void	exec_cmd(t_data *data)
 	while (data->cmds[data->idx])
 	{
 		pipe(data->fd);
-		if (data->redirect_flag)
+		if (check_redir(data->cmds[data->idx]))
 		{
-			data->redirect_flag--;
 			if (redirect(data, data->idx) == -1)
 				break ;
 		}
@@ -121,14 +129,15 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		buf = init_data(&data);
-		if (*buf != 0)
+		if (buf && *buf != 0)
 		{
 			exec_cmd(&data);
 			dup2(data.stdio[0], STDIN_FILENO);
 			dup2(data.stdio[1], STDOUT_FILENO);
-			free(buf);
-			ft_split_free(data.cmds);
+			// ft_split_free(data.cmds);
 		}
+		ft_split_free(data.cmds);
+		free(buf);
 	}
 	return (0);
 }

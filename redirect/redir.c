@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:51:00 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/25 15:02:47 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static	int	redir_exec(t_data *data, t_re *re)
 		else if (re->re_type[i] == 3)
 			error = redir_3(data, re->re_file[i]);
 		else if (re->re_type[i] == 4)
-			error = redir_4(re->re_file[i]);
+			error = redir_4(re->re_file[i], data);
 		if (error == -1)
 			return (-1);
 		i++;

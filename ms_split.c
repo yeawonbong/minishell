@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:45:39 by sma               #+#    #+#             */
-/*   Updated: 2021/09/24 16:31:43 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/25 17:03:32 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ char	**add_str(char **arr, char *toadd, t_data *data, char c)
 	temp[i] = ft_strtrim(toadd, "\t ");
 	if (c == '|')
 	{
-		if (check_redir(temp[i]))
-			data->redirect_flag++;
 		if (ft_strchr(temp[i], '$') || ft_strchr(temp[i], '\'') \
 		|| ft_strchr(temp[i], '"'))
 			temp[i] = ft_modify_buf(data, temp[i]);
@@ -69,6 +67,13 @@ static char	check_quote(char *newbuf, int i, char quote)
 	else if (*(newbuf + i) == quote)
 		quote = 0;
 	return (quote);
+}
+
+char	**pipe_error(char **arr)
+{
+	split_free(arr);
+	printf("minish: syntax error near unexpected token '|'\n");
+	return (0);
 }
 
 char	**ft_split_with(char c, char *buf, char **arr, t_data *data)
@@ -89,8 +94,9 @@ char	**ft_split_with(char c, char *buf, char **arr, t_data *data)
 			if (quote == 0)
 			{
 				arr = add_str(arr, ft_substr(newbuf, 0, i), data, c);
-				if (*(newbuf + (i + 1)))
-					newbuf += (i + 1);
+				if (c == '|' && *(newbuf + (i + 1)) == 0)
+					return (pipe_error(arr));
+				newbuf += (i + 1);
 				i = -1;
 			}
 		}

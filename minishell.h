@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/24 16:43:05 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/25 16:31:15 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void	get_buf(int re_fd[2], char *buf, int fd, char *str);
 int		redir_1(t_data *data, char *file);
 int		redir_2(t_data *data, char *file);
 int		redir_3(t_data *data, char *file);
-int		redir_4(char *str);
+int		redir_4(char *str, t_data *data);
 
 /*
 **	signal
@@ -158,5 +158,7 @@ void	sig_set(int i);
 void	sigint_handler(int signo);
 void	child_handler(int signo);
 void	redirect_handler(int signo);
+int	check_redir(char *temp);
+void	split_free(char **array);
 
 #endif

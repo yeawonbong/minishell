@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:27 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 13:49:15 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/25 15:11:50 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,15 @@ void	get_buf(int re_fd[2], char *buf, int fd, char *str)
 	}
 }
 
-int	redir_4(char *str)
+int	redir_4(char *str, t_data *data)
 {
 	int		re_fd[2];
 	char	*buf;
 	int		fd;
 
 	buf = NULL;
+	dup2(data->stdio[0], STDIN_FILENO);
+	dup2(data->stdio[1], STDOUT_FILENO);
 	fd = dup(STDOUT_FILENO);
 	pipe(re_fd);
 	if (child_in_buf(re_fd, buf, fd, str) == -1)
