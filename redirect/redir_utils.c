@@ -6,11 +6,21 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 19:15:28 by sma               #+#    #+#             */
-/*   Updated: 2021/09/26 17:08:14 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 18:18:12 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	non_builtin(t_data *data)
+{
+	if (exec_in_child(data) == -1)
+	{
+		ft_split_free(data->cmd_args);
+		return (-1);
+	}
+	return (0);
+}
 
 void	join_cmds(t_data *data, int idx)
 {
@@ -29,9 +39,10 @@ void	join_cmds(t_data *data, int idx)
 	data->cmds[idx] = str;
 }
 
-int	re_exec_err(t_re *re)
+int	re_exec_err(t_data *data, t_re *re)
 {
 	ft_split_free(re->re_file);
+	ft_split_free(data->cmd_args);
 	free(re->re_type);
 	return (-1);
 }

@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 17:19:30 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 17:54:52 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	ft_export_add(t_data *data, char **exp_arg, char **tempenv, int add)
 {
 	int	i;
 
-//
 	tempenv = (char **)malloc(sizeof(char *) * (data->env_height + add + 1));
 	ft_copy_env(data->env, tempenv);
 	i = 1;

@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 15:24:32 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 18:21:00 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,9 @@ int		child_in_buf(int re_fd[2], char *buf, int fd, char *str);
 void	get_buf(int re_fd[2], char *buf, int fd, char *str);
 int		check_redir(char *temp);
 void	join_cmds(t_data *data, int idx);
-int		re_exec_err(t_re *re);
+int		non_builtin(t_data *data);
+int		re_exec_err(t_data *data, t_re *re);
+void	join_cmds2(t_data *data, int idx);
 int		redir_1(t_data *data, char *file);
 int		redir_2(t_data *data, char *file);
 int		redir_3(t_data *data, char *file);
@@ -165,7 +167,7 @@ void	sig_set(int i);
 void	sigint_handler(int signo);
 void	child_handler(int signo);
 void	redirect_handler(int signo);
-int	check_redir(char *temp);
+int		check_redir(char *temp);
 void	split_free(char **array);
 
 #endif

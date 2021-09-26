@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 17:25:14 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 18:10:14 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ static	void	exec_cmd(t_data *data)
 {
 	while (data->cmds[data->idx])
 	{
+		get_cmd_arg(data, data->idx);
 		pipe(data->fd);
 		if (check_redir(data->cmds[data->idx]))
 		{
@@ -97,7 +98,6 @@ static	void	exec_cmd(t_data *data)
 		if_pipe_dup2(data, data->fd[0], STDIN_FILENO, data->fd[1]);
 		split_free(data->cmd_args);
 		data->idx++;
-		get_cmd_arg(data, data->idx);
 	}
 }
 
@@ -118,8 +118,6 @@ int	main(int argc, char **argv, char **envp)
 		buf = init_data(&data);
 		if (buf && *buf != 0)
 		{
-			get_cmd_arg(data, data->idx);
-			join_cmds(data, data->idx);
 			exec_cmd(&data);
 			dup2(data.stdio[0], STDIN_FILENO);
 			dup2(data.stdio[1], STDOUT_FILENO);

@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:29 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 17:08:18 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 18:20:44 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,12 @@ int	redirect(t_data *data, int idx)
 	data->cmds[idx] = re.cmd_j;
 	get_cmd_arg(data, idx);
 	if (redir_exec(data, &re) == -1)
-		return (re_exec_err(&re));
+		return (re_exec_err(data, &re));
 	ft_split_free(re.re_file);
 	free(re.re_type);
 	if (check_builtin(data->cmds[data->idx]))
 		ft_builtins(data);
 	else
-	{
-		if (exec_in_child(data) == -1)
-			return (-1);
-	}
+		return (non_builtin(data));
 	return (0);
 }
