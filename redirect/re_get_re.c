@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:21 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/25 16:56:12 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 17:08:17 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static	void	init_re(t_re *re, char *cmds)
 	re->re_argc = count;
 	if (count > 0)
 		re->re_type = (int *)malloc(sizeof(int) * count);
+	else
+		re->re_type = (int *)malloc(sizeof(int));
 	re->re_file = (char **)malloc(sizeof(char *) * (count + 1));
 	re->re_file[count] = NULL;
 	re->cmd_j = 0;
@@ -59,16 +61,27 @@ static	void	get_type(t_re *re, char *space, int argc)
 		re->re_type[argc] = 4;
 }
 
-static	void	redirect_error(char *str)
+static	int	redirect_error(t_re *re, int idx)
 {
-	if (str == NULL)
-	{
+	int	count;
+
+	if (re->space[idx] == NULL)
 		printf("syntax error near unexpected token '%s'\n", "newline");
+	else
+		printf("syntax error near unexpected token '%s'\n", re->space[idx]);
+	free(re->parse);
+	free(re->re_type);
+	split_free(re->space);
+	count = re->re_count;
+	if (count > 0)
+	{
+		while (count > 0)
+			free(re->re_file[--count]);
+		free(re->re_file);
 	}
 	else
-	{
-		printf("syntax error near unexpected token '%s'\n", str);
-	}
+		free(re->re_file);
+	return (-1);
 }
 
 int	get_redirect(char *cmds, t_re *re)
@@ -77,6 +90,8 @@ int	get_redirect(char *cmds, t_re *re)
 
 	i = 0;
 	init_re(re, cmds);
+	if (ft_strchr("<>", re->space[0][0]))
+		return (redirect_error(re, 0));
 	while (re->space[i])
 	{
 		if (ft_strchr("<>", re->space[i][0]))
@@ -84,10 +99,7 @@ int	get_redirect(char *cmds, t_re *re)
 			get_type(re, re->space[i], re->re_count);
 			if (re->space[i + 1] == NULL || \
 						ft_strchr("<>", re->space[i + 1][0]))
-			{
-				redirect_error(re->space[i + 1]);
-				return (-1);
-			}
+				return (redirect_error(re, i + 1));
 			else
 				re->re_file[re->re_count++] = ft_strdup(re->space[++i]);
 		}

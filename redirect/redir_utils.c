@@ -3,14 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 19:15:28 by sma               #+#    #+#             */
-/*   Updated: 2021/09/24 15:39:50 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/26 17:08:14 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	join_cmds(t_data *data, int idx)
+{
+	char	*str;
+	int		i;
+
+	i = 1;
+	str = ft_strdup(data->cmd_args[0]);
+	while (data->cmd_args[i])
+	{
+		str = ft_strjoin_free(str, " ");
+		str = ft_strjoin_free(str, data->cmd_args[i++]);
+	}
+	ft_split_free(data->cmd_args);
+	free(data->cmds[idx]);
+	data->cmds[idx] = str;
+}
+
+int	re_exec_err(t_re *re)
+{
+	ft_split_free(re->re_file);
+	free(re->re_type);
+	return (-1);
+}
 
 void	close_dup_fd(int re_fd[2])
 {

@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/25 16:31:15 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 15:24:32 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef struct s_data
 	int		*sort_env;
 	char	*path;
 	int		redirect_flag;
-	int		pipe_flag;
 	int		stdio[2];
 	int		fd[2];
 }				t_data;
@@ -59,6 +58,7 @@ typedef struct s_qte
 	char	*newbuf;
 	int		i;
 	int		qidx;
+	char	quote;
 }				t_qte;
 
 typedef struct s_utils
@@ -95,6 +95,7 @@ typedef struct s_unset
 /*
 ** minishell.c
 */
+void	get_cmd_arg(t_data *data, int idx);
 void	get_cmd_path(t_data *data);
 int		exec_in_child(t_data *data);
 char	**ft_split_with(char c, char *buf, char **arr, t_data *data);
@@ -111,8 +112,10 @@ void	child_exec(t_data *data);
 /*
 ** ms_fill_data.c
 */
+char	*cmds_err(t_data *data, char *buf);
 void	if_pipe_dup2(t_data *data, int fd1, int fd2, int toclose);
 void	ft_filldata(t_data *data, char **envp);
+int		non_redirect(t_data *data);
 
 /*
 **  ms_modify_buf (quote, envar)
@@ -127,6 +130,7 @@ char	*ft_modify_envar(t_data *data, t_var *var, char *buf);
 */
 int		check_builtin(char *buf);
 void	ft_builtins(t_data *data);
+void	ft_exit(t_data *data);
 void	ft_export(t_data *data, int child);
 void	ft_unset(t_data *data);
 void	ft_cd(t_data *data);
@@ -134,7 +138,7 @@ void	ft_env(t_data *data);
 void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
 char	*ft_pwd(void);
-void	ft_echo(char *cmd);
+void	ft_echo(char **cmd);
 
 /*
 **	redirect
@@ -146,6 +150,9 @@ char	*parse_redir(char *cmds);
 void	close_dup_fd(int fd[2]);
 int		child_in_buf(int re_fd[2], char *buf, int fd, char *str);
 void	get_buf(int re_fd[2], char *buf, int fd, char *str);
+int		check_redir(char *temp);
+void	join_cmds(t_data *data, int idx);
+int		re_exec_err(t_re *re);
 int		redir_1(t_data *data, char *file);
 int		redir_2(t_data *data, char *file);
 int		redir_3(t_data *data, char *file);

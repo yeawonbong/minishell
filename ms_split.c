@@ -6,34 +6,11 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:45:39 by sma               #+#    #+#             */
-/*   Updated: 2021/09/25 17:03:32 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 14:33:16 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	check_redir(char *temp)
-{
-	int		i;
-	char	q;
-
-	i = 0;
-	q = 0;
-	while (temp[i])
-	{
-		if (temp[i] == '\'' || temp[i] == '"')
-		{
-			if (q == 0)
-				q = temp[i];
-			else if (temp[i] == q)
-				q = 0;
-		}
-		if (ft_strchr("<>", temp[i]) && q == 0)
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 char	**add_str(char **arr, char *toadd, t_data *data, char c)
 {
@@ -48,7 +25,7 @@ char	**add_str(char **arr, char *toadd, t_data *data, char c)
 	while (arr[++i])
 		temp[i] = ft_strdup(arr[i]);
 	temp[i] = ft_strtrim(toadd, "\t ");
-	if (c == '|')
+	if (c == ' ')
 	{
 		if (ft_strchr(temp[i], '$') || ft_strchr(temp[i], '\'') \
 		|| ft_strchr(temp[i], '"'))
@@ -76,32 +53,36 @@ char	**pipe_error(char **arr)
 	return (0);
 }
 
+void	init_q(t_qte *q, char *buf)
+{
+	q->newbuf = buf;
+	q->i = 0;
+	q->quote = 0;
+}
+
 char	**ft_split_with(char c, char *buf, char **arr, t_data *data)
 {
-	char	*newbuf;
-	int		i;
-	char	quote;
+	t_qte	q;
 
-	newbuf = buf;
-	i = 0;
-	quote = 0;
-	while (*(newbuf + i))
+	init_q(&q, buf);
+	while (*(q.newbuf + q.i))
 	{
-		if (*(newbuf + i) == '\'' || *(newbuf + i) == '"')
-			quote = check_quote(newbuf, i, quote);
-		if (*(newbuf + i) == c)
+		if (*(q.newbuf + q.i) == '\'' || *(q.newbuf + q.i) == '"')
+			q.quote = check_quote(q.newbuf, q.i, q.quote);
+		if (*(q.newbuf + q.i) == c)
 		{
-			if (quote == 0)
+			if (q.quote == 0)
 			{
-				arr = add_str(arr, ft_substr(newbuf, 0, i), data, c);
-				if (c == '|' && *(newbuf + (i + 1)) == 0)
+				if (0 < q.i)
+					arr = add_str(arr, ft_substr(q.newbuf, 0, q.i), data, c);
+				if (c == '|' && *(q.newbuf + (q.i + 1)) == 0)
 					return (pipe_error(arr));
-				newbuf += (i + 1);
-				i = -1;
+				q.newbuf += (q.i + 1);
+				q.i = -1;
 			}
 		}
-		i++;
+		q.i++;
 	}
-	arr = add_str(arr, ft_substr(newbuf, 0, i), data, c);
+	arr = add_str(arr, ft_substr(q.newbuf, 0, q.i), data, c);
 	return (arr);
 }

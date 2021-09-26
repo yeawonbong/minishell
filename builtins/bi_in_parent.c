@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_in_parent.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybong <ybong@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/24 16:38:39 by ybong            ###   ########seoul.kr  */
+/*   Updated: 2021/09/26 17:19:30 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_export_add(t_data *data, char **exp_arg, char **tempenv, int add)
 {
 	int	i;
 
+//
 	tempenv = (char **)malloc(sizeof(char *) * (data->env_height + add + 1));
 	ft_copy_env(data->env, tempenv);
 	i = 1;
@@ -62,7 +63,7 @@ void	ft_export(t_data *data, int child)
 	{
 		i = 0;
 		while (data->env[i])
-			printf("%s\n", data->env[data->sort_env[i++]]);
+			printf("declare -x %s\n", data->env[data->sort_env[i++]]);
 	}
 	else
 		ft_export_add(data, exp_arg, tempenv, add);
@@ -105,4 +106,27 @@ void	ft_cd(t_data *data)
 		return ;
 	}
 	cd_err(cd_args);
+}
+
+void	ft_exit(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	printf("exit\n");
+	if (!data->cmd_args[1])
+		exit(0);
+	while (data->cmd_args[1][i])
+	{
+		if (i == 0 && data->cmd_args[1][0] == '-')
+			i++;
+		if (!ft_isdigit(data->cmd_args[1][i]))
+		{
+			printf("minish: exit: %s: numeric argument required\n", \
+												 data->cmd_args[1]);
+			exit(255);
+		}
+		i++;
+	}
+	exit(ft_atoi(data->cmd_args[1]));
 }

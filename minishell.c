@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:10 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/25 17:03:23 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 17:25:14 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,16 @@
 
 static int	ft_error(t_data *data)
 {
-	char	**cmd_args;
-
-	cmd_args = ft_split(data->cmds[data->idx], ' ');
 	if (g_status == 127)
 	{
 		dup2(data->stdio[1], STDOUT_FILENO);
 		dup2(data->stdio[0], STDIN_FILENO);
-		if (ft_strchr(cmd_args[0], '/'))
-			printf("minish: %s: No such file or directory\n", cmd_args[0]);
+		if (ft_strchr(data->cmd_args[0], '/'))
+			printf("minish: %s: No such file or directory\n", data->cmd_args[0]);
 		else
-			printf("minish: %s: command not found\n", cmd_args[0]);
-		ft_split_free(cmd_args);
+			printf("minish: %s: command not found\n", data->cmd_args[0]);
 		return (-1);
 	}
-	ft_split_free(cmd_args);
 	return (0);
 }
 
@@ -37,7 +32,7 @@ static char	*init_data(t_data *data)
 	char	*buf;
 	char	*prompt;
 	char	*temp;
-	
+
 	prompt = ft_strjoin_free(ft_pwd(), "$ ");
 	prompt = ft_join_free_all(ft_strdup("ybong_sma@"), prompt);
 	buf = readline(prompt);
@@ -54,15 +49,10 @@ static char	*init_data(t_data *data)
 	temp = buf;
 	buf = ft_strtrim(temp, "\t ");
 	free(temp);
-	data->cmds = ft_split_with('|', buf, data->cmds, data);
-	printf("%s|\n", data->cmds[1]);
-	if (data->cmds == 0)
-	{
-		data->cmds = ft_split("", ' ');
-		free(buf);
-		return (ft_strdup(""));
-	}
 	data->idx = 0;
+	data->cmds = ft_split_with('|', buf, data->cmds, data);
+	if (data->cmds == 0 || data->cmds[0] == 0)
+		return (cmds_err(data, buf));
 	return (buf);
 }
 
@@ -101,16 +91,13 @@ static	void	exec_cmd(t_data *data)
 		}
 		else
 		{
-			if (check_builtin(data->cmds[data->idx]))
-				ft_builtins(data);
-			else
-			{
-				if (exec_in_child(data) == -1)
-					break ;
-			}
+			if (non_redirect(data) == -1)
+				break ;
 		}
 		if_pipe_dup2(data, data->fd[0], STDIN_FILENO, data->fd[1]);
+		split_free(data->cmd_args);
 		data->idx++;
+		get_cmd_arg(data, data->idx);
 	}
 }
 
@@ -131,10 +118,11 @@ int	main(int argc, char **argv, char **envp)
 		buf = init_data(&data);
 		if (buf && *buf != 0)
 		{
+			get_cmd_arg(data, data->idx);
+			join_cmds(data, data->idx);
 			exec_cmd(&data);
 			dup2(data.stdio[0], STDIN_FILENO);
 			dup2(data.stdio[1], STDOUT_FILENO);
-			// ft_split_free(data.cmds);
 		}
 		ft_split_free(data.cmds);
 		free(buf);

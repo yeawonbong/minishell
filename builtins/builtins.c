@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:58:14 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/23 15:17:29 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 17:09:42 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static	void	ft_builtins_in_child(t_data *data, char *cmd)
 		printf("%s\n", ft_pwd());
 	else if (!(ft_strncmp(cmd, "echo", 4)) \
 			&& (!*(cmd + 4) || *(cmd + 4) == ' '))
-		ft_echo(cmd);
+		ft_echo(data->cmd_args);
 	exit(0);
 }
 
@@ -78,10 +78,7 @@ void	ft_builtins(t_data *data)
 	i = data->idx;
 	cmd = ft_strtrim(data->cmds[i], " ");
 	if (!(ft_strncmp(cmd, "exit", 4)) && (!*(cmd + 4) || *(cmd + 4) == ' '))
-	{
-		printf("exit\n");
-		exit(0);
-	}
+		ft_exit(data);
 	if (!ft_builtins_in_parents(data, cmd))
 	{
 		free(cmd);
