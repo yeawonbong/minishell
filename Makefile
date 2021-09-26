@@ -6,7 +6,7 @@
 #    By: sma <sma@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/28 00:12:32 by ybong             #+#    #+#              #
-#    Updated: 2021/09/25 14:50:58 by sma              ###   ########.fr        #
+#    Updated: 2021/09/26 20:22:16 by sma              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,16 +23,16 @@ SRCS = ./minishell.c\
 ./builtins/bi_in_parent.c\
 ./builtins/bi_unset.c\
 ./builtins/builtins.c\
+./builtins/ft_exit.c\
 ./redirect/re_insert_space.c\
 ./redirect/re_get_re.c\
 ./redirect/redir.c\
 ./redirect/re_redirect.c\
 ./redirect/redir_utils.c
 
-CC = gcc #-fsanitize=address
- CFLAGS =  -Wall -Wextra -Werror -I ~/.brew/opt/readline/include  # -I ~/.brew/opt/readline/include
+CC = gcc
+CFLAGS =  -Wall -Wextra -Werror -I ~/.brew/opt/readline/include
 LEADFLAGS =  -lreadline -L ~/.brew/opt/readline/lib
-# LEADFLAGS = -fsanitize=address -lreadline -L /usr/local/opt/readline/lib -I /usr/local/opt/readline/include
 AR = ar rcs
 NAME = minishell.a
 OBJS = $(SRCS:.c=.o) 

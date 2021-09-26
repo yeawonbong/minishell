@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 19:28:11 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 20:17:40 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	replace_process(t_data *data, t_unset *u)
 
 void	ft_export_replace(t_data *data)
 {
-	t_unset u;
+	t_unset	u;
 
 	u.i = 0;
 	while (data->env[u.i])
@@ -88,8 +88,6 @@ void	ft_export(t_data *data, int child)
 
 	tempenv = NULL;
 	ft_export_replace(data);
-	// for (int a=0; data->cmd_args[a]; a++)
-	// 	printf("CMDARGS = %s\n", data->cmd_args[a]);
 	exp_arg = data->cmd_args;
 	add = 0;
 	i = 0;
@@ -107,17 +105,6 @@ void	ft_export(t_data *data, int child)
 	}
 	else
 		ft_export_add(data, exp_arg, tempenv, add);
-}
-
-static void	cd_err(char **cd_args)
-{
-	if (chdir(cd_args[1]) == -1)
-	{
-		printf("minish : cd: no such file or directory: %s\n", cd_args[1]);
-		g_status = 1;
-		return ;
-	}
-	g_status = 0;
 }
 
 void	ft_cd(t_data *data)
@@ -143,27 +130,4 @@ void	ft_cd(t_data *data)
 		return ;
 	}
 	cd_err(cd_args);
-}
-
-void	ft_exit(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	printf("exit\n");
-	if (!data->cmd_args[1])
-		exit(0);
-	while (data->cmd_args[1][i])
-	{
-		if (i == 0 && data->cmd_args[1][0] == '-')
-			i++;
-		if (!ft_isdigit(data->cmd_args[1][i]))
-		{
-			printf("minish: exit: %s: numeric argument required\n", \
-												 data->cmd_args[1]);
-			exit(255);
-		}
-		i++;
-	}
-	exit(ft_atoi(data->cmd_args[1]));
 }

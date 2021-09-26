@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 09:34:48 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/20 19:38:37 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 20:17:49 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	sigint_handler(int signo)
 		rl_replace_line("", 1);
 		rl_on_new_line();
 		rl_redisplay();
-		g_status = 130;
+		g_status = 1;
 	}
 }
 

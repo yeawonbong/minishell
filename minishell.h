@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 19:00:31 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 20:16:55 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ void	ft_copy_env(char **src, char **dest);
 void	ft_sort_env(t_data *data);
 char	*ft_pwd(void);
 void	ft_echo(char **cmd);
+void	cd_err(char **cd_args);
+void	ft_exit_arg(t_data *data);
 
 /*
 **	redirect

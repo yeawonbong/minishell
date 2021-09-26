@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:29:08 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 15:24:38 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 20:17:47 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_filldata(t_data *data, char **envp)
 	int		i;
 
 	i = 0;
-	g_status = 1;
+	g_status = 0;
 	data->idx = 0;
 	data->path = 0;
 	data->env_height = ft_strarr_height(envp);

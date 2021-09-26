@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:58:14 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 17:09:42 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 20:20:15 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,11 @@ void	ft_builtins(t_data *data)
 	i = data->idx;
 	cmd = ft_strtrim(data->cmds[i], " ");
 	if (!(ft_strncmp(cmd, "exit", 4)) && (!*(cmd + 4) || *(cmd + 4) == ' '))
+	{
 		ft_exit(data);
+		free(cmd);
+		return ;
+	}
 	if (!ft_builtins_in_parents(data, cmd))
 	{
 		free(cmd);
