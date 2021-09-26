@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:25:17 by sma               #+#    #+#             */
-/*   Updated: 2021/09/26 17:17:43 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 18:33:55 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	ft_unset(t_data *data)
 {
 	t_unset	u;
 
-	u.unset_arg = ft_split(data->cmds[data->idx], ' ');
+	u.unset_arg = data->cmd_args;
 	u.tempenv = NULL;
 	u.i = 0;
 	u.t = 0;
@@ -88,5 +88,4 @@ void	ft_unset(t_data *data)
 		u.i = 0;
 		ft_unset_process(data, &u);
 	}
-	ft_split_free(u.unset_arg);
 }

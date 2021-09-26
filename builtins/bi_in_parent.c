@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:30:47 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 17:54:52 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 19:28:11 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,44 @@ void	ft_export_add(t_data *data, char **exp_arg, char **tempenv, int add)
 	ft_sort_env(data);
 }
 
+void	replace_process(t_data *data, t_unset *u)
+{
+	u->t = 0;
+	while (data->cmd_args[u->u][u->t] != '=')
+		u->t++;
+	u->var2 = ft_substr(data->cmd_args[u->u], 0, u->t);
+	if (!ft_strncmp(u->var, u->var2, longer_len(u->var, u->var2)))
+	{
+		free(data->env[u->i]);
+		data->env[u->i] = data->cmd_args[u->u];
+		data->cmd_args[u->u] = ft_strdup("");
+	}
+	free(u->var2);
+}
+
+void	ft_export_replace(t_data *data)
+{
+	t_unset u;
+
+	u.i = 0;
+	while (data->env[u.i])
+	{
+		u.j = 0;
+		while (data->env[u.i][u.j] != '=')
+			u.j++;
+		u.var = ft_substr(data->env[u.i], 0, u.j);
+		u.u = 1;
+		while (data->cmd_args[u.u])
+		{
+			if (ft_strchr(data->cmd_args[u.u], '='))
+				replace_process(data, &u);
+			u.u++;
+		}
+		free(u.var);
+		u.i++;
+	}
+}
+
 void	ft_export(t_data *data, int child)
 {
 	char	**exp_arg;
@@ -49,12 +87,15 @@ void	ft_export(t_data *data, int child)
 	int		i;
 
 	tempenv = NULL;
-	exp_arg = ft_split(data->cmds[data->idx], ' ');
+	ft_export_replace(data);
+	// for (int a=0; data->cmd_args[a]; a++)
+	// 	printf("CMDARGS = %s\n", data->cmd_args[a]);
+	exp_arg = data->cmd_args;
 	add = 0;
 	i = 0;
 	while (exp_arg[i])
 	{
-		if (ft_strchr(exp_arg[i], '='))
+		if (*exp_arg[i] && ft_strchr(exp_arg[i], '='))
 			add++;
 		i++;
 	}
@@ -66,7 +107,6 @@ void	ft_export(t_data *data, int child)
 	}
 	else
 		ft_export_add(data, exp_arg, tempenv, add);
-	ft_split_free(exp_arg);
 }
 
 static void	cd_err(char **cd_args)
@@ -75,10 +115,8 @@ static void	cd_err(char **cd_args)
 	{
 		printf("minish : cd: no such file or directory: %s\n", cd_args[1]);
 		g_status = 1;
-		ft_split_free(cd_args);
 		return ;
 	}
-	ft_split_free(cd_args);
 	g_status = 0;
 }
 
@@ -89,7 +127,7 @@ void	ft_cd(t_data *data)
 	char	*path;
 
 	i = 0;
-	cd_args = ft_split(data->cmds[data->idx], ' ');
+	cd_args = data->cmd_args;
 	if (cd_args[1] == NULL)
 	{
 		while (data->env[i])

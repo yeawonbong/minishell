@@ -6,7 +6,7 @@
 /*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:37:42 by ybong             #+#    #+#             */
-/*   Updated: 2021/09/26 18:21:00 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/26 19:00:31 by sma              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_unset
 	char	**unset_arg;
 	char	**tempenv;
 	char	*var;
+	char	*var2;
 	int		i;
 	int		j;
 	int		u;
