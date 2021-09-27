@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sma <sma@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ybong <ybong@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 15:45:39 by sma               #+#    #+#             */
-/*   Updated: 2021/09/26 20:17:50 by sma              ###   ########.fr       */
+/*   Updated: 2021/09/27 16:12:18 by ybong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char	**pipe_error(char **arr)
 {
 	split_free(arr);
 	printf("minish: syntax error near unexpected token '|'\n");
+	g_status = 258;
 	return (0);
 }
 
